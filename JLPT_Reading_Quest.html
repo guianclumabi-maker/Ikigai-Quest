@@ -28,7 +28,7 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
 .breakdown-chip:hover{border-color:#83d1c6;box-shadow:0 2px 6px rgba(11,130,124,0.08)}
 .chip-head{display:inline-flex;flex-direction:column;gap:3px;min-width:95px;flex:none}
 .chip-jp{font-family:'Noto Sans JP',sans-serif;font-weight:800;font-size:16px;color:#243845;line-height:1.2}
-.chip-romaji{font-size:11px;color:#0b827c;font-weight:700;font-family:'DM Mono',monospace}
+
 .chip-tag{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:2px 6px;border-radius:6px;width:fit-content;background:#eef2fa;color:#3867b6}
 .chip-tag.tag-particle{background:#eef2fa;color:#3867b6}
 .chip-tag.tag-verb,.chip-tag.tag-verbphrase{background:#fdf0ea;color:#d15637}
@@ -139,7 +139,7 @@ function renderSentenceBreakdownHtml(sentence, translation, note){
     return '<div class="breakdown-chip">' +
       '<div class="chip-head">' +
         '<span class="chip-jp">' + furigana(t.term) + '</span>' +
-        '<span class="chip-romaji">' + t.romaji + '</span>' +
+        
         '<span class="chip-tag ' + tagClass + '">' + t.tag + '</span>' +
       '</div>' +
       '<div class="chip-desc">' + t.desc + '</div>' +
