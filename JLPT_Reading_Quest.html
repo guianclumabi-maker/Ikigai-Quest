@@ -53,7 +53,7 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
 .level.level-locked{opacity:0.65;border-style:dashed}
 
 </style><style>body.modal-open{overflow:hidden;overscroll-behavior:none}.overlay.open{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.example-explanation{display:block;margin-top:7px;padding-top:7px;border-top:1px solid #e5e1d7;color:#435b4b!important;font-size:12px;line-height:1.55}.punctuation-guide{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 8px;padding:10px 12px;background:#f4f1e8;border-radius:9px;font-size:12px;color:#526455}.punctuation-guide b{color:#26372c}</style></head>
-<body><div class="app-layout"><aside class="sidebar"><div class="side-brand"><strong>生</strong><div>生き甲斐Quest<small>いき　がい</small></div></div><nav class="nav" aria-label="Main menu">
+<body><div class="app-layout"><aside class="sidebar"><a class="side-brand" href="index.html" aria-label="Ikigai Quest home page" title="Back to the home page"><strong>生</strong><div>生き甲斐Quest<small>いき　がい</small></div></a><nav class="nav" aria-label="Main menu">
 <button class="nav-button active" data-view="Learn"><span class="nav-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg></span>Learn</button>
 <button class="nav-button" data-view="Cards"><span class="nav-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="14" rx="2" ry="2"></rect><path d="M6 3h14a2 2 0 0 1 2 2v14"></path></svg></span>Cards</button>
 <button class="nav-button" data-view="Stats"><span class="nav-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>Stats</button>
@@ -65,7 +65,7 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
 <div id="badgeRow" class="badge-row"></div>
 <section><div class="section-head"><div><h2>Your study path</h2><p>40 lessons across foundations, particles, N5, and N4.</p></div></div><div id="continueCard" class="continue-card"></div><div id="reviewCard"></div><div class="levels" id="levels"></div><div class="cards" id="cards"></div></section>
 <footer class="bottom"><span>Ikigai Quest · Foundations + Particles + N5 + N4 · Original study material<br>Not an official JLPT publication.</span><button id="reset">Reset saved progress</button></footer></main></div></div>
-<div class="placement-page" id="placementPage" hidden></div><div class="support-page" id="supportPage" hidden><header class="support-nav"><a class="support-brand" id="supportBrand" href="#home" aria-label="Ikigai Quest home"><strong>生</strong><span>生き甲斐Quest<small>いき　がい</small></span></a><nav><button id="supportFeedback">Share feedback</button><button id="supportBack">← Back to home</button></nav></header><main class="support-card"><div class="support-heart">💛</div><div class="support-kicker">A LITTLE SUPPORT GOES A LONG WAY</div><h1>Help 生き甲斐 Quest<br>grow</h1><p class="support-copy">生き甲斐 Quest is an independent project made to help beginners take small, steady steps into Japanese. If the lessons are helping you, your support can help pay for hosting and make room for more original lessons and practice.</p><div class="support-note"><strong>Every bit is appreciated.</strong><br>Support is completely optional. The core learning path will stay free, and sharing the course with another learner helps too.</div><button class="donate-disabled" disabled>Donation link coming soon</button><p class="support-caption">I’m setting up a secure way to accept support. Please check back soon.</p></main><a class="support-start" href="#home" id="supportStart">Start learning →</a></div><div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-top"><span class="pill" id="modalPill">FOUNDATIONS</span><button class="close" id="close" aria-label="Close">×</button></div><div id="play"></div></section></div>
+<div class="placement-page" id="placementPage" hidden></div><div class="support-page" id="supportPage" hidden><header class="support-nav"><a class="support-brand" id="supportBrand" href="index.html" aria-label="Ikigai Quest home"><strong>生</strong><span>生き甲斐Quest<small>いき　がい</small></span></a><nav><button id="supportFeedback">Share feedback</button><button id="supportBack">← Back to home</button></nav></header><main class="support-card"><div class="support-heart">💛</div><div class="support-kicker">A LITTLE SUPPORT GOES A LONG WAY</div><h1>Help 生き甲斐 Quest<br>grow</h1><p class="support-copy">生き甲斐 Quest is an independent project made to help beginners take small, steady steps into Japanese. If the lessons are helping you, your support can help pay for hosting and make room for more original lessons and practice.</p><div class="support-note"><strong>Every bit is appreciated.</strong><br>Support is completely optional. The core learning path will stay free, and sharing the course with another learner helps too.</div><button class="donate-disabled" disabled>Donation link coming soon</button><p class="support-caption">I’m setting up a secure way to accept support. Please check back soon.</p></main><a class="support-start" href="#home" id="supportStart">Start learning →</a></div><div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-top"><span class="pill" id="modalPill">FOUNDATIONS</span><button class="close" id="close" aria-label="Close">×</button></div><div id="play"></div></section></div>
 <script>
 const lessons=[
 ['Foundations','Sounds and rhythm','Count mora; hear long vowels, small っ, and ん.'],['Foundations','Greetings and survival phrases','Choose a greeting, thank someone, and ask for help.'],['Foundations','Numbers, days, and months','Build numbers and read dates and weekdays.'],['Foundations','Self-introduction','Share your name, home country, and role.'],
@@ -193,7 +193,7 @@ function getChipTagClass(tag){
   return 'tag-noun';
 }
 
-function renderSentenceBreakdownHtml(sentence, translation, note){
+function tokenizeSentence(sentence){
   var clean = sentence.replace(/（[^）]*）/g, '').replace(/[。！？\s]/g, '');
   var tokens = [];
   var i = 0;
@@ -203,12 +203,7 @@ function renderSentenceBreakdownHtml(sentence, translation, note){
       var sub = clean.slice(i, i + len);
       if (BREAKDOWN_LEXICON[sub]) {
         var item = BREAKDOWN_LEXICON[sub];
-        matched = {
-          term: sub,
-          romaji: item[0],
-          tag: item[1],
-          desc: item[2]
-        };
+        matched = {term: sub, romaji: item[0], tag: item[1], desc: item[2]};
         i += len;
         break;
       }
@@ -219,39 +214,35 @@ function renderSentenceBreakdownHtml(sentence, translation, note){
       i++;
     }
   }
+  return tokens;
+}
 
-  if (!tokens.length) {
-    return note ? '<div class="example-explanation">' + furigana(note) + '</div>' : '';
+function renderExampleLi(e){
+  var sentence = (typeof e === 'string') ? e : e[0];
+  var translation = (typeof e === 'string') ? '' : e[1];
+  var note = (typeof e === 'string') ? '' : (e[2] || '');
+  var tokens = (typeof e === 'string') ? [] : tokenizeSentence(sentence);
+  var head = '<div class="ex-jp"><span class="ex-jp-text">' + furigana(sentence) + '</span>' + sayButtonHtml(sentence) + '</div>' +
+    (translation ? '<div class="ex-en">' + furigana(translation) + '</div>' : '');
+  if (!tokens.length && !note) {
+    return '<li class="ex">' + head + '</li>';
   }
-
-  var chipsHtml = tokens.map(function(t) {
-    var tagClass = getChipTagClass(t.tag);
-    return '<div class="breakdown-chip">' +
-      '<div class="chip-head">' +
-        '<span class="chip-jp">' + furigana(t.term) + '</span>' +
-        
-        '<span class="chip-tag ' + tagClass + '">' + t.tag + '</span>' +
-      '</div>' +
-      '<div class="chip-desc">' + t.desc + '</div>' +
-    '</div>';
+  var tiles = tokens.map(function(t) {
+    return '<button type="button" class="tile" data-word="' + escAttr(t.term) + '" data-desc="' + escAttr(t.desc) + '">' +
+      '<span class="tile-jp">' + furigana(t.term) + '</span>' +
+      '<span class="tile-gloss">' + escAttr(tileGloss(t)) + '</span>' +
+    '</button>';
   }).join('');
-
-  var noteHtml = note ? '<div class="breakdown-note">💡 <span>' + furigana(note) + '</span></div>' : '';
-
-  return '<div class="breakdown-card">' +
-    '<div class="breakdown-title">' +
-      '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
-      'Breakdown' +
-    '</div>' +
-    '<div class="breakdown-grid">' +
-      chipsHtml +
-    '</div>' +
-    noteHtml +
+  var card = '<div class="ex-card">' +
+    '<div class="ex-card-title">How it works</div>' +
+    (note ? '<div class="ex-card-sub">' + furigana(note) + '</div>' : '') +
+    (tiles ? '<div class="tile-row">' + tiles + '</div><div class="tile-detail">Tap a word to see what it means.</div>' : '') +
   '</div>';
+  return '<li class="ex">' + head + card + '</li>';
 }
 
 function showQuestion(){
-const qs=bank[current]||[];if(!lessonReady[current]){let m=current>=24?{explain:particleLessons[current-24].reading,pattern:'',note:'',examples:particleLessons[current-24].examples,vocab:[]}:lessonMaterials[current];let examples=m?.examples||[];if(current<24)examples=examples.map((e,idx)=>[e[0],e[1],e[2]||explainCourseExample(current,e[0],e[1],m,idx)]);document.querySelector('#play').innerHTML=`<h2 id="modalTitle">${lessons[current][1]}</h2><p class="lesson-goal">${lessons[current][2]}</p><article class="lesson-reader"><h3>Learn the idea</h3><div class="lesson-explanation">${m?.explain||lessons[current][2]}</div>${m?.pattern?`<div class="lesson-pattern"><b>Pattern</b><br>${furigana(m.pattern)}</div>`:''}${m?.note?`<p class="lesson-note">${furigana(m.note)}</p>`:''}<aside class="punctuation-guide"><b>Japanese punctuation</b><span>、 marks a brief pause. 。 marks the end of a sentence.</span></aside><h3>Read each example</h3><ol>${examples.map(e=>`<li><span>${typeof e==='string'?furigana(e):furigana(e[0])}</span>${typeof e==='string'?'':`<small>${furigana(e[1])}</small>${renderSentenceBreakdownHtml(e[0],e[1],e[2]||'')}`}</li>`).join('')}</ol><aside class="lesson-reflection"><b>Pause and reflect</b><p>In one example, what does the particle tell you? Explain its job in your own words before you continue.</p></aside>${m?.vocab?.length?`<h3>Useful words</h3><p>${(Array.isArray(m.vocab)?m.vocab.map(v=>Array.isArray(v)?v.join(' · '):String(v)).join('　'):m.vocab)}</p>`:''}<div class="lesson-actions"><button class="next" id="markReading">Finish reading · +10 XP</button><button class="practice-choice" id="beginPractice">Try the optional practice</button></div></article>`;document.querySelector('#markReading').onclick=()=>finish(1,1,true);document.querySelector('#beginPractice').onclick=()=>{lessonReady[current]=true;showQuestion()};return}if(!qs.length){document.querySelector('#play').innerHTML=`<h2 id="modalTitle">${lessons[current][1]}</h2><p class="lesson-goal">${lessons[current][2]}</p><p>Read the 10 examples for this lesson in your study guide, then try its practice questions and reading check.</p><button class="next" id="studyDone">Mark lesson as read · +10 XP</button>`;document.querySelector('#studyDone').onclick=()=>finish(1,1,true);return}if(qIndex>=qs.length){finish(score,qs.length);return}let q=qs[qIndex];answered=false;document.querySelector('#play').innerHTML=`<h2 id="modalTitle">${lessons[current][1]}</h2><p class="lesson-goal">${lessons[current][2]}</p><div class="qcount"><span>QUESTION ${qIndex+1} OF ${qs.length}</span><span>⚡ ${score*10} XP</span></div><div class="qbar"><i style="width:${qIndex/qs.length*100}%"></i></div><div class="question">${furigana(q[0])}</div><div class="choices">${q[1].map((a,i)=>`<button class="choice" data-choice="${i}"><span class="letter">${String.fromCharCode(65+i)}</span>${furigana(a)}</button>`).join('')}</div><div class="feedback" id="feedback"></div><button class="next" id="next" disabled>${qIndex===qs.length-1?'See results':'Next question'}</button>`;document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(+b.dataset.choice));document.querySelector('#next').onclick=()=>{qIndex++;showQuestion()}}
+const qs=bank[current]||[];if(!lessonReady[current]){let m=current>=24?{explain:particleLessons[current-24].reading,pattern:'',note:'',examples:particleLessons[current-24].examples,vocab:[]}:lessonMaterials[current];let examples=m?.examples||[];if(current<24)examples=examples.map((e,idx)=>[e[0],e[1],e[2]||explainCourseExample(current,e[0],e[1],m,idx)]);document.querySelector('#play').innerHTML=`<h2 id="modalTitle">${lessons[current][1]}</h2><p class="lesson-goal">${lessons[current][2]}</p><article class="lesson-reader"><h3>Learn the idea</h3><div class="lesson-explanation">${m?.explain||lessons[current][2]}</div>${m?.pattern?`<div class="lesson-pattern"><b>Pattern</b><br>${furigana(m.pattern)}</div>`:''}${m?.note?`<p class="lesson-note">${furigana(m.note)}</p>`:''}<aside class="punctuation-guide"><b>Japanese punctuation</b><span>、 marks a brief pause. 。 marks the end of a sentence.</span></aside><h3>Read each example</h3><ol>${examples.map(renderExampleLi).join('')}</ol><aside class="lesson-reflection"><b>Pause and reflect</b><p>In one example, what does the particle tell you? Explain its job in your own words before you continue.</p></aside>${m?.vocab?.length?`<h3>Useful words</h3><p>${(Array.isArray(m.vocab)?m.vocab.map(v=>Array.isArray(v)?v.join(' · '):String(v)).join('　'):m.vocab)}</p>`:''}<div class="lesson-actions"><button class="next" id="markReading">Finish reading · +10 XP</button><button class="practice-choice" id="beginPractice">Try the optional practice</button></div></article>`;document.querySelector('#markReading').onclick=()=>finish(1,1,true);document.querySelector('#beginPractice').onclick=()=>{lessonReady[current]=true;showQuestion()};return}if(!qs.length){document.querySelector('#play').innerHTML=`<h2 id="modalTitle">${lessons[current][1]}</h2><p class="lesson-goal">${lessons[current][2]}</p><p>Read the 10 examples for this lesson in your study guide, then try its practice questions and reading check.</p><button class="next" id="studyDone">Mark lesson as read · +10 XP</button>`;document.querySelector('#studyDone').onclick=()=>finish(1,1,true);return}if(qIndex>=qs.length){finish(score,qs.length);return}let q=qs[qIndex];answered=false;document.querySelector('#play').innerHTML=`<h2 id="modalTitle">${lessons[current][1]}</h2><p class="lesson-goal">${lessons[current][2]}</p><div class="qcount"><span>QUESTION ${qIndex+1} OF ${qs.length}</span><span>⚡ ${score*10} XP</span></div><div class="qbar"><i style="width:${qIndex/qs.length*100}%"></i></div><div class="question">${furigana(q[0])}</div><div class="choices">${q[1].map((a,i)=>`<button class="choice" data-choice="${i}"><span class="letter">${String.fromCharCode(65+i)}</span>${furigana(a)}</button>`).join('')}</div><div class="feedback" id="feedback"></div><button class="next" id="next" disabled>${qIndex===qs.length-1?'See results':'Next question'}</button>`;document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(+b.dataset.choice));document.querySelector('#next').onclick=()=>{qIndex++;showQuestion()}}
 function answer(n){if(answered)return;answered=true;let q=bank[current][qIndex],buttons=[...document.querySelectorAll('.choice')];buttons[q[2]].classList.add('correct');if(n===q[2]){score++;trackMissed(current,qIndex,true);document.querySelector('#feedback').textContent='Correct! '+q[3]}else{trackMissed(current,qIndex,false);buttons[n].classList.add('wrong');document.querySelector('#feedback').textContent='Not quite. '+q[3];document.querySelector('#feedback').classList.add('bad')}document.querySelector('#next').disabled=false}
 function finish(points,total,study=false){if(!state.done.includes(current)){state.done.push(current);let today=new Date().toLocaleDateString('en-CA');if(state.day!==today){let prev=new Date();prev.setDate(prev.getDate()-1);state.streak=state.day===prev.toLocaleDateString('en-CA')?state.streak+1:1;state.day=today}state.xp+=study?10:points*10;save()}let percent=Math.round(points/total*100);document.querySelector('#play').innerHTML=`<div class="result"><div class="medal">${study?'📖':percent>=80?'🏆':percent>=50?'🌟':'🌱'}</div><h2>${study?'Quest noted!':percent>=80?'Quest cleared!':'Good practice!'}</h2><p>${study?'You marked this lesson as studied.':`You answered ${points} of ${total} correctly (${percent}%).`}</p><p><b>+${study?10:points*10} XP</b> · Your progress is saved on this device.</p><button class="next" id="doneBtn">Back to the map</button></div>`;document.querySelector('#doneBtn').onclick=closeModal;render()}
 function closeModal(){document.querySelector('#overlay').classList.remove('open');document.body.classList.remove('modal-open');if(current!==null)lessonReady[current]=false}document.querySelector('#close').onclick=closeModal;document.querySelector('#overlay').onclick=e=>{if(e.target.id==='overlay')closeModal()};document.querySelector('#reset').onclick=()=>{if(confirm('Reset all Ikigai Quest progress saved on this device?')){state={xp:0,done:[],day:'',streak:0};save();render()}};render();
@@ -273,9 +264,9 @@ function startKanaDeck(di){const d=decks[di];if(!d)return;state.cardsKnown ||= {
 const kanaRows={hiragana:['あいうえお','かきくけこ','さしすせそ','たちつてと','なにぬねの','はひふへほ','まみむめも','やゆよ','らりるれろ','わをん'],katakana:['アイウエオ','カキクケコ','サシスセソ','タチツテト','ナニヌネノ','ハヒフヘホ','マミムメモ','ヤユヨ','ラリルレロ','ワヲン']};const romajiRows=['a i u e o','ka ki ku ke ko','sa shi su se so','ta chi tsu te to','na ni nu ne no','ha hi fu he ho','ma mi mu me mo','ya yu yo','ra ri ru re ro','wa wo n'];for(const [type,rows] of Object.entries(kanaRows)){const rom=romajiRows.flatMap(x=>x.split(' '));const glyphs=[...rows.join('')];decks.push({title:type==='hiragana'?'Hiragana':'Katakana',sub:'46 basic sounds · tap to see the reading',icon:type==='hiragana'?'あ':'ア',cards:glyphs.map((g,i)=>[g,rom[i]])})}
 function completeKana(deckId){state.kanaDone ||= [false,false];state.kanaDone[deckId-3]=true;let both=state.kanaDone[0]&&state.kanaDone[1];if(both){state.kanaRequired=false;state.placement='Foundations';filter='Foundations'}state.activity=(deckId===3?'Hiragana':'Katakana')+' basic sounds completed';persist();render();document.querySelector('#modalPill').textContent='KANA COMPLETE';document.querySelector('#play').innerHTML=`<div class="result"><div class="medal">${both?'🎉':'🌸'}</div><h2>${deckId===3?'Hiragana complete!':'Katakana complete!'}</h2><p>${both?'You’ve covered both basic scripts. Foundations is now open.':'Good progress. Finish Katakana too, then you can start the Foundations lessons.'}</p><button class="next" id="kanaNext">${both?'Start Foundations':'Continue to '+(deckId===3?'Katakana':'Hiragana')}</button></div>`;document.querySelector('#kanaNext').onclick=()=>{closeModal();filter=both?'Foundations':'Scripts';render()}}
 function startPlacement(){document.querySelector('#placementPage').hidden=false;renderPlacementIntro()}
-function renderPlacementIntro(){document.querySelector('#placementPage').innerHTML=`<header class="placement-nav"><div class="support-brand"><strong>生</strong><span>生き甲斐Quest<small>いき　がい</small></span></div></header><main class="placement-card"><span class="support-kicker">A GOOD PLACE TO BEGIN</span><h1>Where are you with Japanese?</h1><p class="placement-copy">A short check helps choose a useful starting point. If you’re completely new, we’ll begin with the Japanese writing system.</p><button class="placement-option" id="newToJapanese"><span class="option-symbol">あ</span><span><strong>I’m new to Japanese</strong><small>Start with Hiragana and Katakana, then move on to grammar.</small></span><b>→</b></button><button class="placement-option" id="takeCheck"><span class="option-symbol">文</span><span><strong>I can already read kana</strong><small>Take a five question check to find the right lesson level.</small></span><b>→</b></button><p class="placement-note">You can change your starting point later.</p></main>`;document.querySelector('#newToJapanese').onclick=()=>{state.placement='kana';state.kanaRequired=true;state.kanaDone=[false,false];filter='Scripts';save();document.querySelector('#placementPage').hidden=true;render()};document.querySelector('#takeCheck').onclick=runPlacementCheck}
+function renderPlacementIntro(){document.querySelector('#placementPage').innerHTML=`<header class="placement-nav"><a class="support-brand" href="index.html" aria-label="Ikigai Quest home page"><strong>生</strong><span>生き甲斐Quest<small>いき　がい</small></span></a></header><main class="placement-card"><span class="support-kicker">A GOOD PLACE TO BEGIN</span><h1>Where are you with Japanese?</h1><p class="placement-copy">A short check helps choose a useful starting point. If you’re completely new, we’ll begin with the Japanese writing system.</p><button class="placement-option" id="newToJapanese"><span class="option-symbol">あ</span><span><strong>I’m new to Japanese</strong><small>Start with Hiragana and Katakana, then move on to grammar.</small></span><b>→</b></button><button class="placement-option" id="takeCheck"><span class="option-symbol">文</span><span><strong>I can already read kana</strong><small>Take a five question check to find the right lesson level.</small></span><b>→</b></button><p class="placement-note">You can change your starting point later.</p></main>`;document.querySelector('#newToJapanese').onclick=()=>{state.placement='kana';state.kanaRequired=true;state.kanaDone=[false,false];filter='Scripts';save();document.querySelector('#placementPage').hidden=true;render()};document.querySelector('#takeCheck').onclick=runPlacementCheck}
 const placementQs=[['Which hiragana makes the sound “a”?',['あ','お','む','ぬ'],0],['Which katakana makes the sound “shi”?',['シ','ツ','ソ','チ'],0],['Complete “I am a student”: 学生（がくせい）___。',['です','でした','ます','で'],0],['Which particle completes 本（ほん）___読（よ）みます? (“I read a book.”)',['を','は','に','で'],0],['Which form means “looks delicious”: おいし___です?',['そう','いそう','くそう','だそう'],0]];
-function runPlacementCheck(){let n=0;const answers=[];function ask(){if(n===placementQs.length){let kanaOK=answers[0]===0&&answers[1]===0;let level=!kanaOK?'kana':answers[2]!==0?'Foundations':answers[3]!==0||answers[4]!==0?'N5':'N4';state.placement=level;state.kanaRequired=level==='kana';state.kanaDone=state.kanaDone||[false,false];filter=level==='kana'?'Scripts':level;save();render();document.querySelector('#placementPage').innerHTML=`<header class="placement-nav"><div class="support-brand"><strong>生</strong><span>生き甲斐Quest<small>LEVEL CHECK · 5 QUESTIONS</small></span></div></header><main class="placement-card result"><div class="medal">${level==='kana'?'あ':level==='N4'?'🏆':'📖'}</div><span class="support-kicker">YOUR STARTING POINT</span><h1>${level==='kana'?'Hiragana and Katakana':level==='Foundations'?'Foundations':level}</h1><p class="placement-copy">${level==='kana'?'Let’s begin with the two Japanese phonetic scripts. Learn Hiragana first, then Katakana.':level==='Foundations'?'You can read kana. Begin with polite sentences, particles, and everyday phrases.':'Your answers suggest you’re ready to begin at '+level+'. You can revisit earlier lessons whenever you like.'}</p><button class="continue-button" id="placementGo">${level==='kana'?'Start with Hiragana':'Go to '+level} →</button></main>`;document.querySelector('#placementGo').onclick=()=>{document.querySelector('#placementPage').hidden=true;render()};return}let q=placementQs[n];document.querySelector('#placementPage').innerHTML=`<header class="placement-nav"><div class="support-brand"><strong>生</strong><span>生き甲斐Quest<small>LEVEL CHECK · ${n+1} / 5</small></span></div></header><main class="placement-card"><div class="placement-progress"><i style="width:${n/5*100}%"></i></div><span class="support-kicker">QUESTION ${n+1} OF 5</span><h1>${furigana(q[0])}</h1><div class="placement-choices">${q[1].map((a,i)=>`<button class="placement-choice" data-answer="${i}">${furigana(a)}</button>`).join('')}</div><button class="placement-back" id="placementBack">Start over</button></main>`;document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{answers[n]=+b.dataset.answer;n++;if(n===2&&!(answers[0]===0&&answers[1]===0)){n=5;ask();return}ask()});document.querySelector('#placementBack').onclick=renderPlacementIntro}ask()}
+function runPlacementCheck(){let n=0;const answers=[];function ask(){if(n===placementQs.length){let kanaOK=answers[0]===0&&answers[1]===0;let level=!kanaOK?'kana':answers[2]!==0?'Foundations':answers[3]!==0||answers[4]!==0?'N5':'N4';state.placement=level;state.kanaRequired=level==='kana';state.kanaDone=state.kanaDone||[false,false];filter=level==='kana'?'Scripts':level;save();render();document.querySelector('#placementPage').innerHTML=`<header class="placement-nav"><a class="support-brand" href="index.html" aria-label="Ikigai Quest home page"><strong>生</strong><span>生き甲斐Quest<small>LEVEL CHECK · 5 QUESTIONS</small></span></a></header><main class="placement-card result"><div class="medal">${level==='kana'?'あ':level==='N4'?'🏆':'📖'}</div><span class="support-kicker">YOUR STARTING POINT</span><h1>${level==='kana'?'Hiragana and Katakana':level==='Foundations'?'Foundations':level}</h1><p class="placement-copy">${level==='kana'?'Let’s begin with the two Japanese phonetic scripts. Learn Hiragana first, then Katakana.':level==='Foundations'?'You can read kana. Begin with polite sentences, particles, and everyday phrases.':'Your answers suggest you’re ready to begin at '+level+'. You can revisit earlier lessons whenever you like.'}</p><button class="continue-button" id="placementGo">${level==='kana'?'Start with Hiragana':'Go to '+level} →</button></main>`;document.querySelector('#placementGo').onclick=()=>{document.querySelector('#placementPage').hidden=true;render()};return}let q=placementQs[n];document.querySelector('#placementPage').innerHTML=`<header class="placement-nav"><a class="support-brand" href="index.html" aria-label="Ikigai Quest home page"><strong>生</strong><span>生き甲斐Quest<small>LEVEL CHECK · ${n+1} / 5</small></span></a></header><main class="placement-card"><div class="placement-progress"><i style="width:${n/5*100}%"></i></div><span class="support-kicker">QUESTION ${n+1} OF 5</span><h1>${furigana(q[0])}</h1><div class="placement-choices">${q[1].map((a,i)=>`<button class="placement-choice" data-answer="${i}">${furigana(a)}</button>`).join('')}</div><button class="placement-back" id="placementBack">Start over</button></main>`;document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{answers[n]=+b.dataset.answer;n++;if(n===2&&!(answers[0]===0&&answers[1]===0)){n=5;ask();return}ask()});document.querySelector('#placementBack').onclick=renderPlacementIntro}ask()}
 function openStats(){state.cardsKnown ||= {};const known=Object.values(state.cardsKnown).reduce((n,a)=>n+a.length,0);feature('Your learning stats','A snapshot of your progress so far. Your progress stays saved in this browser.');document.querySelector('#play').innerHTML+=`<div class="stat-grid"><div class="stat-box"><b>${state.xp}</b><span>TOTAL XP</span></div><div class="stat-box"><b>${state.done.length}/40</b><span>QUESTS CLEARED</span></div><div class="stat-box"><b>${state.streak}</b><span>DAY STREAK</span></div><div class="stat-box"><b>${known}</b><span>CARDS KNOWN</span></div></div><div class="feature-card"><h3>Quest progress</h3><p>Foundations ${state.done.filter(i=>i<4).length}/4 · Particles ${state.done.filter(i=>i>=24&&i<40).length}/16 · N5 ${state.done.filter(i=>i>=4&&i<14).length}/10 · N4 ${state.done.filter(i=>i>=14&&i<24).length}/10</p><div class="qbar"><i style="width:${Math.round(state.done.length/40*100)}%"></i></div></div>`}
 function openSupport(){feature('Help Ikigai Quest grow','A little support goes a long way. This independent study project is built to help beginners take steady steps into Japanese.');document.querySelector('#play').innerHTML+=`<div class="support-hero">💛</div><div class="feature-card"><h3>Every bit is appreciated.</h3><p>Support is optional. The learning path is here for you to use, and sharing it with another learner helps too.</p><button id="shareCourse">Share the study path</button></div><p style="font-size:10px;text-align:center;color:var(--muted);margin-top:12px">Thanks for being part of the learning community.</p>`;document.querySelector('#shareCourse').onclick=async()=>{try{await navigator.clipboard.writeText("https://ikigai-quest.guianclumabi.workers.dev/");document.querySelector('#shareCourse').textContent='Link copied ✓'}catch{document.querySelector('#shareCourse').textContent='Copy the page link from your browser'}}}
 function openFeedback(){feature('Share feedback','What would make this study path more useful for you? Your note will be saved in this browser.');document.querySelector('#play').innerHTML+=`<form class="feedback-form"><textarea id="feedbackNote" placeholder="Write a suggestion or report an issue…"></textarea><button class="next" type="submit">Save feedback note</button><p id="feedbackSaved" class="lesson-goal"></p></form>`;document.querySelector('.feedback-form').onsubmit=e=>{e.preventDefault();let v=document.querySelector('#feedbackNote').value.trim();if(v){localStorage.setItem('ikigaiFeedbackNote',v);document.querySelector('#feedbackSaved').textContent='Saved on this device. Thank you for the note!'}}}
@@ -289,7 +280,7 @@ const oldFinish=finish;finish=function(points,total,study=false){oldFinish(point
 <script>
 function openSupport(){closeModal();document.querySelector('#supportPage').hidden=false}
 function leaveSupport(){document.querySelector('#supportPage').hidden=true;document.querySelectorAll('.nav-button').forEach(x=>x.classList.toggle('active',x.dataset.view==='Learn'))}
-document.querySelector('#supportBack').onclick=leaveSupport;document.querySelector('#supportStart').onclick=e=>{e.preventDefault();leaveSupport();document.querySelector('[data-view="Learn"]').click()};document.querySelector('#supportBrand').onclick=e=>{e.preventDefault();leaveSupport();document.querySelector('[data-view="Learn"]').click()};document.querySelector('#supportFeedback').onclick=()=>{leaveSupport();document.querySelector('[data-view="Feedback"]').click()};
+document.querySelector('#supportBack').onclick=leaveSupport;document.querySelector('#supportStart').onclick=e=>{e.preventDefault();leaveSupport();document.querySelector('[data-view="Learn"]').click()};document.querySelector('#supportFeedback').onclick=()=>{leaveSupport();document.querySelector('[data-view="Feedback"]').click()};
 </script>
 
 
@@ -307,6 +298,7 @@ ruby{ruby-position:under;-webkit-ruby-position:under;line-height:1.75}rt{font-si
 
 <style>
 /* Chapter progress, review card, badges, tighter hero */
+a.side-brand{text-decoration:none;cursor:pointer}a.side-brand:hover strong{filter:brightness(1.1)}a.side-brand:focus-visible,a.support-brand:focus-visible{outline:2px solid var(--green);outline-offset:4px;border-radius:12px}
 .hero{padding:20px 28px;gap:16px}.hero h1{font-size:clamp(24px,3vw,32px);letter-spacing:-1px;margin:8px 0}.hero p{font-size:13px;line-height:1.5}.hero:after{font-size:150px;top:-26px}.stat b{font-size:24px}
 .progress-wrap{margin:14px 2px 10px}
 .section-head{margin-top:16px}.section-head h2{font-size:21px}
@@ -325,6 +317,33 @@ ruby{ruby-position:under;-webkit-ruby-position:under;line-height:1.75}rt{font-si
 .review-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:14px 18px;border:1px solid #f0d58a;border-radius:14px;background:#fff6df}
 .review-card b{display:block;font-size:14px}.review-card small{font-size:11px;color:var(--muted)}
 .review-card .continue-button{background:var(--orange)}
+/* Wider popup + word tiles + audio button */
+.modal{width:min(1040px,calc(100% - 32px))}
+.modal:has(.lesson-reader){width:min(1180px,calc(100% - 32px))}
+#play .question,#play .choices,#play .feedback,#play>.next{max-width:820px}
+.lesson-reader .lesson-explanation,.lesson-reader .lesson-note,.lesson-reader .lesson-pattern{max-width:82ch}
+ruby{ruby-align:center}
+.lesson-reader ol{gap:12px}
+.lesson-reader li.ex{display:block;padding:16px 18px;background:#f5f8f3;border-radius:14px}
+.lesson-reader .ex-jp{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:19px;font-weight:700;line-height:2;color:var(--ink)}
+.lesson-reader .ex-jp-text{display:block}
+.lesson-reader .ex-en{font-size:13px;color:var(--muted);margin:0 0 12px}
+.lesson-reader .ex-card{padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.lesson-reader .ex-card-title{font-size:15px;font-weight:700;color:var(--ink)}
+.lesson-reader .ex-card-sub{margin-top:3px;font-size:13px;line-height:1.6;color:var(--muted)}
+.lesson-reader .tile-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.lesson-reader .tile{display:flex;flex-direction:column;align-items:flex-start;min-width:68px;max-width:230px;padding:7px 10px;background:#f6f3eb;border:1px solid transparent;border-radius:8px;text-align:left;font:inherit;color:inherit}
+.lesson-reader .tile:hover{border-color:#aebda9}
+.lesson-reader .tile.on{background:#e5eee2;border-color:#9ccfbe}
+.lesson-reader .tile-jp{font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:17px;line-height:1.55;color:var(--ink)}
+.lesson-reader .tile-gloss{font-size:10px;line-height:1.3;color:var(--muted);margin-top:1px}
+.lesson-reader .tile-detail{margin-top:9px;font-size:12.5px;line-height:1.55;color:#34594b;min-height:1.2em}
+.lesson-reader .tile-detail b{font-family:'Noto Sans JP',sans-serif}
+.lesson-reader .say{flex:none;width:34px;height:34px;display:inline-grid;place-items:center;padding:0;border:1px solid #b8e0d6;background:var(--mint);color:var(--green);border-radius:50%}
+.lesson-reader .say:hover{background:#d4efe6}
+.lesson-reader .say.playing{background:var(--orange);border-color:var(--orange);color:#fff}
+.lesson-reader .say svg{display:block}
+
 @media(max-width:520px){.levels{display:grid;grid-template-columns:1fr 1fr}.level{min-width:0}.review-card{flex-direction:column;align-items:flex-start}.review-card .continue-button{width:100%}}
 </style>
 <script>
@@ -406,6 +425,99 @@ function updateExtras(){
 var baseRender=render;
 render=function(){baseRender();updateExtras()};
 updateExtras();
+})();
+</script>
+<script>
+/* === Word tiles + sentence audio === */
+var SPEECH_OVERRIDES={'一、二、三':'いち、に、さん','四、五、六':'よん、ご、ろく','七、八、九、十':'なな、はち、きゅう、じゅう','二十':'にじゅう','三十五':'さんじゅうご','百':'ひゃく','一月':'いちがつ','六月':'ろくがつ','日曜日':'にちようび','金曜日':'きんようび'};
+function escAttr(v){return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function spokenText(raw){
+  var t=String(raw);
+  if(SPEECH_OVERRIDES[t])return SPEECH_OVERRIDES[t];
+  var plain=t.replace(/（[^）]*）/g,'').replace(/[。！？\s]/g,'');
+  if(t.indexOf('→')>=0||plain.length<=3){
+    t=t.replace(/[\u3400-\u9fff々]+（([ぁ-ゖァ-ヺー]+)）/g,'$1');
+  }
+  t=t.replace(/（[^）]*）/g,'');
+  return t.replace(/\s*→\s*/g,'、').replace(/\s+/g,'').trim();
+}
+function speechId(text){
+  var h=2166136261;
+  for(var i=0;i<text.length;i++){h=(h^text.charCodeAt(i))>>>0;h=Math.imul(h,16777619)>>>0}
+  return 'a'+('00000000'+h.toString(16)).slice(-8);
+}
+function tileGloss(t){
+  var tag=t.tag||'',d=t.desc||'';
+  if(/particle|sentence-ending|source/i.test(tag))return tag;
+  var q=d.match(/"([^"]+)"/);
+  if(q)return q[1];
+  return d.replace(/\s*\([^)]*\)\s*/g,' ').trim();
+}
+function sayButtonHtml(sentence){
+  return '<button type="button" class="say" data-say="'+escAttr(sentence)+'" title="Listen" aria-label="Play audio">'+
+    '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>';
+}
+(function(){
+ var manifest=null,loading=null,audioEl=null;
+ function loadManifest(){
+  if(loading)return loading;
+  if(typeof fetch!=='function'){manifest={};loading=Promise.resolve();return loading}
+  loading=fetch('audio/manifest.json').then(function(r){return r.ok?r.json():[]}).then(function(list){manifest={};(list||[]).forEach(function(id){manifest[id]=1})}).catch(function(){manifest={}});
+  return loading;
+ }
+ function stopAll(){
+  if(audioEl){try{audioEl.pause()}catch(e){}audioEl=null}
+  if('speechSynthesis' in window)try{speechSynthesis.cancel()}catch(e){}
+  document.querySelectorAll('.say.playing').forEach(function(b){b.classList.remove('playing')});
+ }
+ function pickVoice(){
+  if(!('speechSynthesis' in window))return null;
+  var vs=speechSynthesis.getVoices().filter(function(v){return /^ja/i.test(v.lang)});
+  if(!vs.length)return null;
+  function score(v){var n=v.name;
+   if(/natural|neural|online|premium|enhanced/i.test(n))return 3;
+   if(/nanami|keita|kyoko|otoya|o-ren|hattori|siri/i.test(n))return 2;
+   if(!/google/i.test(n))return 1;
+   return 0;}
+  vs.sort(function(a,b){return score(b)-score(a)});
+  return vs[0];
+ }
+ function speakFallback(text,btn){
+  if(!('speechSynthesis' in window)){btn.classList.remove('playing');return}
+  var u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';u.rate=0.9;
+  var v=pickVoice();if(v)u.voice=v;
+  u.onend=u.onerror=function(){btn.classList.remove('playing')};
+  speechSynthesis.speak(u);
+ }
+ function play(btn){
+  var raw=btn.getAttribute('data-say'),text=spokenText(raw),id=speechId(text);
+  btn.classList.add('playing');
+  if(manifest&&manifest[id]){
+   var a=new Audio('audio/'+id+'.mp3');audioEl=a;
+   a.onended=function(){btn.classList.remove('playing')};
+   a.onerror=function(){btn.classList.remove('playing');speakFallback(text,btn)};
+   var p=a.play();if(p&&p.catch)p.catch(function(){btn.classList.remove('playing')});
+  }else{speakFallback(text,btn)}
+ }
+ document.addEventListener('click',function(ev){
+  var say=ev.target.closest&&ev.target.closest('.say');
+  if(say){
+   if(say.classList.contains('playing')){stopAll();return}
+   stopAll();
+   if(manifest)play(say);else loadManifest().then(function(){play(say)});
+   return;
+  }
+  var tile=ev.target.closest&&ev.target.closest('.tile');
+  if(tile){
+   var card=tile.closest('.ex-card'),det=card&&card.querySelector('.tile-detail');if(!det)return;
+   var was=tile.classList.contains('on');
+   card.querySelectorAll('.tile.on').forEach(function(x){x.classList.remove('on')});
+   if(was){det.textContent='Tap a word to see what it means.'}
+   else{tile.classList.add('on');det.innerHTML='<b>'+escAttr(tile.getAttribute('data-word'))+'</b> — '+escAttr(tile.getAttribute('data-desc'))}
+  }
+ });
+ if('speechSynthesis' in window&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
+ loadManifest();
 })();
 </script>
 <script>
