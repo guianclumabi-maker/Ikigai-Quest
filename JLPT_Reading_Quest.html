@@ -62,7 +62,7 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
 </nav><div class="activity"><div class="activity-title" style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Last activity</div><div class="activity-row" id="activityText">No activity yet</div></div></aside><div class="main-content"><main class="shell"><header class="top"><div class="brand"><div class="brand-icon">生</div><div>Ikigai Quest<small>Japanese learning adventure</small></div></div><div class="profile"><div class="avatar">🌱</div><span>YOUR LEARNING JOURNEY</span></div></header>
 <section class="hero"><div><div class="eyebrow">FOUNDATIONS · PARTICLES · N5 · N4 · READING</div><h1>Japanese, from your very first steps.</h1><p>Learn hiragana and katakana, build everyday foundations, then read clear lessons on particles and selected N5–N4 grammar. Each chapter explains the idea and walks through examples. Practice is there when you are ready.</p></div><div class="hero-right"><div class="stat"><b id="xp">0</b><span>Total XP</span></div><div class="stat"><b id="cleared">0/47</b><span>Lessons</span></div><div class="streak"><b>🔥 <span id="streak">0</span></b><span>DAY STREAK</span></div></div></section>
 <div class="progress-wrap"><span>JOURNEY PROGRESS</span><div class="progress"><i id="progress" style="width:0%"></i></div><span id="pct">0%</span></div>
-<div id="badgeRow" class="badge-row"></div>
+<section class="badge-panel" aria-labelledby="badgeHeading"><div class="badge-heading"><div><p class="badge-kicker">YOUR MILESTONES</p><h2 id="badgeHeading">Achievement badges</h2></div><span class="badge-total" id="badgeTotal">0 of 9 earned</span></div><div id="badgeRow" class="badge-row" role="list" aria-label="Achievement badges"></div></section>
 <section><div class="section-head"><div><h2>Your study path</h2><p>47 lessons across foundations, particles, N5, N4, and reading practice.</p></div></div><div id="continueCard" class="continue-card"></div><div id="reviewCard"></div><div id="practiceCard"></div><div class="levels" id="levels"></div><div id="goalCard"></div><div class="cards" id="cards"></div></section>
 <footer class="bottom"><span>Ikigai Quest · Foundations + Particles + N5 + N4 · Original study material<br>Not an official JLPT publication.</span><span class="bottom-actions"><button id="backupBtn">Back up or restore progress</button><button id="reset">Reset saved progress</button></span></footer></main></div></div>
 <div class="placement-page" id="placementPage" hidden></div><div class="support-page" id="supportPage" hidden><header class="support-nav"><a class="support-brand" id="supportBrand" href="index.html" aria-label="Ikigai Quest home"><strong>生</strong><span>生き甲斐Quest<small>いき　がい</small></span></a><nav><button id="supportFeedback">Share feedback</button><button id="supportBack">← Back to home</button></nav></header><main class="support-card"><div class="support-heart">💛</div><div class="support-kicker">A LITTLE SUPPORT GOES A LONG WAY</div><h1>Help 生き甲斐 Quest<br>grow</h1><p class="support-copy">生き甲斐 Quest is an independent project made to help beginners take small, steady steps into Japanese. If the lessons are helping you, your support can help pay for hosting and make room for more original lessons and practice.</p><div class="support-note"><strong>Every bit is appreciated.</strong><br>Support is completely optional. The core learning path will stay free, and sharing the course with another learner helps too.</div><button class="donate-disabled" disabled>Donation link coming soon</button><p class="support-caption">I’m setting up a secure way to accept support. Please check back soon.</p></main><a class="support-start" href="#home" id="supportStart">Start learning →</a></div><div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-top"><span class="pill" id="modalPill">FOUNDATIONS</span><button class="close" id="close" aria-label="Close">×</button></div><div id="play"></div></section></div>
@@ -326,12 +326,25 @@ a.side-brand{text-decoration:none;cursor:pointer}a.side-brand:hover strong{filte
 .lvl-bar{display:block;width:100%;height:4px;background:#e2d9c8;border-radius:9px;overflow:hidden}
 .lvl-bar b{display:block;height:100%;background:var(--orange);border-radius:9px;transition:width .4s}
 .level.active .lvl-bar{background:rgba(255,255,255,.3)}.level.active .lvl-bar b{background:#fff}
-.badge-row{display:flex;align-items:center;gap:7px;overflow-x:auto;padding:2px 2px 6px;margin:0 0 4px}
-.badge-label{font:500 10px 'DM Mono';letter-spacing:1px;color:var(--muted);white-space:nowrap;margin-right:4px}
-.badge-chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:5px 11px;border-radius:99px;font-size:11px;font-weight:700;border:1px solid var(--line);cursor:default}
-.badge-chip i{font-style:normal;font-size:13px}
-.badge-chip.on{background:#fff6df;border-color:#f0d58a;color:#7a5a00}
-.badge-chip.off{background:transparent;color:#a39b8c;border-style:dashed}
+.badge-panel{margin:0 0 23px;padding:18px;border:1px solid #e7e4d9;border-radius:20px;background:linear-gradient(120deg,#fffefa 0%,#f5f8f2 100%);box-shadow:0 8px 24px #25322208}
+.badge-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px}
+.badge-kicker{margin:0 0 3px;color:var(--green);font:500 10px 'DM Mono';letter-spacing:1.2px;text-transform:uppercase}
+.badge-heading h2{margin:0;font-size:18px;letter-spacing:-.35px}
+.badge-total{flex:none;padding:7px 11px;border:1px solid #d9e7dc;border-radius:99px;background:#f0f7f1;color:#416b4b;font-size:12px;font-weight:700}
+.badge-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.badge-chip{display:grid;grid-template-columns:42px minmax(0,1fr);align-items:start;gap:11px;min-height:105px;padding:13px;border:1px solid var(--line);border-radius:15px;background:#fffefa;color:var(--ink);white-space:normal;cursor:default;transition:transform .16s,border-color .16s,box-shadow .16s}
+.badge-chip:hover{transform:translateY(-1px);border-color:#c8d6c5;box-shadow:0 5px 14px #2532220b}
+.badge-mark{width:42px;height:42px;display:grid;place-items:center;border:1px solid #dce5db;border-radius:14px;background:#edf3ed;color:#416b4b;font-size:14px;font-weight:800;letter-spacing:-.3px}
+.badge-copy{display:grid;align-content:start;gap:4px;min-width:0}
+.badge-name{font-size:14px;line-height:1.25;font-weight:800;color:var(--ink)}
+.badge-hint{font-size:13px;line-height:1.4;color:var(--muted)}
+.badge-status{justify-self:start;margin-top:2px;padding:3px 8px;border-radius:99px;background:#f1f0eb;color:#72796f;font-size:11px;line-height:1.2;font-weight:700}
+.badge-chip.on{border-color:#bdd8c1;background:linear-gradient(135deg,#fffefa 0%,#eff7f0 100%)}
+.badge-chip.on .badge-mark{border-color:#b9d9c7;background:#def1e7;color:#147567}
+.badge-chip.on .badge-status{background:#dff1e5;color:#32683f}
+.badge-chip.off .badge-mark{border-color:#e6e3dc;background:#f3f1eb;color:#858a82}
+@media(max-width:760px){.badge-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:390px){.badge-panel{padding:14px}.badge-row{grid-template-columns:1fr}.badge-chip{min-height:82px;grid-template-columns:40px minmax(0,1fr);padding:11px}.badge-mark{width:40px;height:40px}}
 .review-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding:14px 18px;border:1px solid #f0d58a;border-radius:14px;background:#fff6df}
 .review-card b{display:block;font-size:14px}.review-card small{font-size:11px;color:var(--muted)}
 .review-card .continue-button{background:var(--orange)}
@@ -407,15 +420,15 @@ ruby{ruby-align:center}
 (function(){
 function ensure(){state.missed=state.missed||[];state.badges=state.badges||{};}
 var BADGES=[
- {id:'first',icon:'🌱',name:'First step',hint:'Finish your first lesson',test:function(){return state.done.length>=1}},
+ {id:'first',icon:'01',name:'First step',hint:'Finish your first lesson',test:function(){return state.done.length>=1}},
  {id:'kana',icon:'あ',name:'Kana reader',hint:'Complete Hiragana and Katakana',test:function(){var k=state.kanaDone||[];return !!(k[0]&&k[1])}},
- {id:'foundations',icon:'🏡',name:'Foundations',hint:'Finish all 4 Foundations lessons',test:function(){var p=chapterProgress('Foundations');return p.done>=p.total}},
- {id:'particles',icon:'🧩',name:'Particle pro',hint:'Finish all 16 Particles lessons',test:function(){var p=chapterProgress('Particles');return p.done>=p.total}},
- {id:'n5',icon:'📘',name:'N5 complete',hint:'Finish all 10 N5 lessons',test:function(){var p=chapterProgress('N5');return p.done>=p.total}},
- {id:'n4',icon:'🏔️',name:'N4 complete',hint:'Finish all 10 N4 lessons',test:function(){var p=chapterProgress('N4');return p.done>=p.total}},
- {id:'reader',icon:'📖',name:'Reader',hint:'Finish all Reading passages',test:function(){var p=chapterProgress('Reading');return p.done>=p.total}},
- {id:'streak',icon:'🔥',name:'7-day streak',hint:'Study 7 days in a row',test:function(){return state.streak>=7}},
- {id:'reviewer',icon:'🔁',name:'Reviewer',hint:'Answer 10 missed questions correctly in review',test:function(){return (state.reviewedCorrect||0)>=10}}
+ {id:'foundations',icon:'基',name:'Foundations',hint:'Finish all 4 Foundations lessons',test:function(){var p=chapterProgress('Foundations');return p.done>=p.total}},
+ {id:'particles',icon:'は',name:'Particle pro',hint:'Finish all 16 Particles lessons',test:function(){var p=chapterProgress('Particles');return p.done>=p.total}},
+ {id:'n5',icon:'N5',name:'N5 complete',hint:'Finish all 10 N5 lessons',test:function(){var p=chapterProgress('N5');return p.done>=p.total}},
+ {id:'n4',icon:'N4',name:'N4 complete',hint:'Complete the plain-form bridge and all 10 N4 lessons',test:function(){var p=chapterProgress('N4');return p.done>=p.total}},
+ {id:'reader',icon:'読',name:'Reader',hint:'Finish all Reading passages',test:function(){var p=chapterProgress('Reading');return p.done>=p.total}},
+ {id:'streak',icon:'7',name:'7-day streak',hint:'Study 7 days in a row',test:function(){return state.streak>=7}},
+ {id:'reviewer',icon:'↻',name:'Reviewer',hint:'Answer 10 missed questions correctly in review',test:function(){return (state.reviewedCorrect||0)>=10}}
 ];
 var badgesReady=false;
 function checkBadges(silent){
@@ -426,7 +439,8 @@ function checkBadges(silent){
 function renderBadges(){
  var row=document.getElementById('badgeRow');if(!row)return;
  var n=BADGES.filter(function(b){return state.badges[b.id]}).length;
- row.innerHTML='<span class="badge-label">BADGES '+n+'/'+BADGES.length+'</span>'+BADGES.map(function(b){var on=!!state.badges[b.id];return '<span class="badge-chip '+(on?'on':'off')+'" title="'+b.hint+'"><i>'+(on?b.icon:'🔒')+'</i>'+b.name+'</span>'}).join('');
+ var total=document.getElementById('badgeTotal');if(total)total.textContent=n+' of '+BADGES.length+' earned';
+ row.innerHTML=BADGES.map(function(b){var on=!!state.badges[b.id];return '<article class="badge-chip '+(on?'on':'off')+'" role="listitem" aria-label="'+b.name+'. '+b.hint+'. '+(on?'Earned':'Not earned yet')+'"><span class="badge-mark" aria-hidden="true">'+b.icon+'</span><span class="badge-copy"><strong class="badge-name">'+b.name+'</strong><span class="badge-hint">'+b.hint+'</span><span class="badge-status">'+(on?'Earned':'Not yet')+'</span></span></article>'}).join('');
 }
 function validMissed(){
  ensure();
