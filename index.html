@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fff8ec">
-<meta name="description" content="Try a free beginner Japanese lesson, preview full hiragana and katakana charts, and practice everyday kanji, grammar, and selected N5 to N4 reading at your own pace.">
+<meta name="description" content="Learn Japanese for free with Ikigai Quest. Study kana and selected JLPT N5 and N4 lessons, or practice everyday Japanese for JFT-Basic A2.">
 <title>生き甲斐 Quest (いきがい) — Small steps into Japanese</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta property="og:type" content="website"><meta property="og:site_name" content="生き甲斐 Quest"><meta property="og:title" content="生き甲斐 Quest — Small steps into Japanese"><meta property="og:description" content="Try a free beginner Japanese lesson, preview full hiragana and katakana charts, and practice everyday kanji, grammar, and selected N5 to N4 reading at your own pace."><meta property="og:url" content="https://ikigai-quest.learn-japanese.workers.dev/"><meta property="og:image" content="https://ikigai-quest.learn-japanese.workers.dev/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Ikigai Quest: small steps into Japanese"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="生き甲斐 Quest — Small steps into Japanese"><meta name="twitter:description" content="Try a free beginner Japanese lesson, preview full hiragana and katakana charts, and practice everyday kanji, grammar, and selected N5 to N4 reading at your own pace."><meta name="twitter:image" content="https://ikigai-quest.learn-japanese.workers.dev/og-image.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@500;700;900&family=Noto+Serif+JP:wght@500;600;700;900&display=swap');
@@ -34,12 +34,22 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
 .guide-downloads{margin-top:16px;padding:20px;background:#f7f6ef;border:1px solid var(--line);border-radius:18px}.guide-downloads h3{margin:0 0 5px;font-size:16px}.guide-downloads>p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}.guide-combined{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;padding:14px 15px;background:#eaf4ec;border:1px solid #d2e4d4;border-radius:13px}.guide-combined strong{font-size:13px}.guide-combined span{display:block;margin-top:3px;color:var(--muted);font-size:11px}.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.guide-card{display:flex;align-items:center;gap:13px;padding:15px;background:var(--paper);border:1px solid var(--line);border-radius:14px}.guide-level{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;background:var(--mint);border-radius:13px;color:var(--teal);font-weight:900}.guide-card:nth-child(2) .guide-level{background:#fff0d2;color:#9a6900}.guide-card-copy{flex:1}.guide-card strong{font-size:13px}.guide-card p{margin:3px 0 0;color:var(--muted);font-size:11px;line-height:1.4}.guide-card .button{white-space:nowrap}
 @media(max-width:780px){.guide-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.guide-card{flex-wrap:wrap}.guide-card-copy{min-width:calc(100% - 58px)}.guide-card .button{margin-left:55px}.guide-combined{align-items:flex-start;flex-direction:column}}
+.study-paths{padding-block:28px 46px;scroll-margin-top:24px}
+.study-path-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.study-path-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:clamp(20px,3.5vw,32px);border:1px solid #dfded1;border-radius:20px;background:#fffdfa}
+.study-path-card.jft-path{background:#e9f2e9;border-color:#c4d8ca}
+.study-path-card h3{font-size:clamp(21px,3vw,28px);margin:0;line-height:1.2}
+.study-path-card p{margin:0;color:#40594f;line-height:1.55}
+.study-path-card .eyebrow{margin:0;font-size:.875rem}
+.study-path-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:auto;padding-top:8px}
+.study-path-actions .text-link{font-size:.9rem}
+@media(max-width:700px){.study-path-grid{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
 <header class="wrap nav">
   <a class="brand" href="#top" aria-label="生き甲斐 Quest (いきがい) home"><span class="brand-mark">生</span><span class="brand-name"><span class="brand-word"><span class="brand-part"><span>生き</span><small>いき</small></span><span class="brand-part"><span>甲斐</span><small>がい</small></span><span class="quest-word"> Quest</span></span></span></a>
-  <nav class="navlinks" aria-label="Main navigation"><a href="#about">About</a><a href="#how">How it works</a><a href="#inside">What's inside</a><a href="support.html">Support</a><a href="#" data-feedback-trigger>Feedback</a><a class="button small" href="JLPT_Reading_Quest.html">Start learning <span aria-hidden="true">→</span></a></nav>
+  <nav class="navlinks" aria-label="Main navigation"><a href="#about">About</a><a href="#how">How it works</a><a href="#inside">What's inside</a><a href="support.html">Support</a><a href="#" data-feedback-trigger>Feedback</a><a class="button small" href="#study-paths">Study paths</a></nav>
 </header>
 <main id="top">
   <section class="wrap hero">
@@ -47,20 +57,37 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
       <div class="eyebrow">A friendly first step into Japanese</div>
       <h1>Read a little.<br>Understand <em>a lot.</em></h1>
       <p class="lead">First learn how the Japanese scripts work. Then build confidence with kana cards, useful everyday kanji, and original readings for real-life moments.</p>
-      <div class="hero-actions"><a class="button" href="JLPT_Reading_Quest.html">Start learning free <span aria-hidden="true">→</span></a><a class="text-link" href="#how">See how the path works ↓</a></div>
+      <div class="hero-actions"><a class="button" href="#study-paths">Choose your study path</a><a class="text-link" href="#sample-title">Try a reading sample</a></div>
       <p class="trust">Beginner-friendly · Learn at your own pace · Progress saved on your device</p>
     </div>
     <div class="art" aria-label="Japanese flashcard showing the character あ and its sound, a">
-      <div class="sun"></div><div class="float-note note-a"><b>01 / 118</b>Your next small win</div>
+      <div class="sun"></div><div class="float-note note-a"><b>Hiragana</b>Start with the vowels</div>
       <div class="paper-card"><div class="paper-top"><span>Field note · 001</span><span>あ</span></div><div class="big-kana">あ</div><div class="reading-chip">a</div><div class="note-line">Say it aloud. Spot it in a word.</div><div class="stamp">一歩ずつ<br>one step at a time</div></div>
       <div class="float-note note-b"><b>Cards → choices → reading</b>A clear learning rhythm</div>
+    </div>
+  </section>
+  <section class="wrap study-paths" id="study-paths" aria-labelledby="study-paths-title">
+    <div class="section-head"><h2 id="study-paths-title">Choose your study path</h2><p>Both paths start with beginner Japanese. Choose the one that fits what you want to do.</p></div>
+    <div class="study-path-grid">
+      <article class="study-path-card">
+        <div class="eyebrow">JLPT N5 / N4</div>
+        <h3>Japanese grammar and reading</h3>
+        <p>Build your kana, kanji, particles, and grammar through worked examples and selected N5 and N4 reading practice.</p>
+        <div class="study-path-actions"><a class="button" href="JLPT_Reading_Quest.html">Open the JLPT course</a></div>
+      </article>
+      <article class="study-path-card jft-path">
+        <div class="eyebrow">JFT-BASIC A2</div>
+        <h3>Japanese for Life in Japan</h3>
+        <p>Practice everyday Japanese for shops, transport, and work. Read practical texts, try chapter checkpoints, and take two practice exams.</p>
+        <div class="study-path-actions"><a class="button" href="jft-basic.html">Open the JFT-Basic course</a><a class="text-link" href="pdf/Ikigai_Quest_JFT_Basic_A2_Learner_Workbook.pdf" download>Download workbook</a></div>
+      </article>
     </div>
   </section>
   <section class="wrap sample-preview" aria-labelledby="sample-title">
     <div class="sample-copy"><div class="eyebrow">Try one, no commitment</div><h2 id="sample-title">A tiny reading preview</h2><p>Try a question before you start. This sample does not save progress.</p></div>
     <div class="sample-card"><div class="sample-kicker">READ THE CLUE</div><p class="sample-japanese"><ruby>田中<rt>たなか</rt></ruby>さんは <ruby>水<rt>みず</rt></ruby>を <ruby>飲<rt>の</rt></ruby>みます。</p><p class="sample-translation">Tanaka drinks water.</p><h3>What does Tanaka drink?</h3><div class="sample-options" role="group" aria-label="Choose what Tanaka drinks"><button type="button" class="sample-choice" data-correct="false" onclick="selectSample(this)">お茶 · Tea</button><button type="button" class="sample-choice" data-correct="true" onclick="selectSample(this)">水 · Water</button><button type="button" class="sample-choice" data-correct="false" onclick="selectSample(this)">コーヒー · Coffee</button><button type="button" class="sample-choice" data-correct="false" onclick="selectSample(this)">牛乳 · Milk</button></div><div class="sample-actions"><button type="button" class="button small" onclick="checkSample()">Check answer</button><p id="sampleFeedback" aria-live="polite">Choose an answer to try the sample.</p></div></div>
   </section>
-  <div class="wrap statsline" aria-label="Course contents"><div class="stat"><strong>47</strong><span>lessons</span></div><div class="stat"><strong>ひらがな · カタカナ</strong><span>kana flashcards and drills</span></div><div class="stat"><strong>N5 → N4</strong><span>beginner content through N4 level</span></div></div>
+  <div class="wrap statsline" aria-label="Course contents"><div class="stat"><strong>47</strong><span>JLPT path lessons</span></div><div class="stat"><strong>ひらがな · カタカナ</strong><span>kana flashcards and drills</span></div><div class="stat"><strong>15</strong><span>JFT-Basic lessons and two practice exams</span></div></div>
   <section class="wrap section" id="inside">
     <div class="section-head"><div class="eyebrow">Small lessons, real progress</div><h2>Start with the building blocks</h2><p>Meet the Japanese scripts first, build beginner foundations, then progress through N5 and selected N4 grammar and readings with regular review checkpoints.</p></div>
     <div class="feature-grid">
@@ -76,14 +103,14 @@ body{margin:0;min-height:100vh;background:linear-gradient(135deg,rgba(255,243,22
     <aside class="about-card"><span class="about-icon">🌱</span><div class="eyebrow">What we believe</div><h3>Learning should be free and open to everyone.</h3><p>Everyone deserves a clear, welcoming first step — whatever their budget, schedule, or reason for learning.</p><div class="about-divider"></div><p class="about-japanese">学びの一歩を、みんなに。</p><small>A first step in learning, for everyone.</small></aside>
   </div></section>
   <section class="path-section" id="how"><div class="wrap section path-grid">
-  <div class="path-copy"><div class="eyebrow">Your learning path</div><h2>Chapters that make the next step clear.</h2><p>Open the chapter you need, study the lesson, and return to any topic for review. Your completed lessons and practice are tracked as you go.</p><a class="text-link" href="JLPT_Reading_Quest.html">Open the learning path →</a></div>
+  <div class="path-copy"><div class="eyebrow">Your learning paths</div><h2>Chapters that make the next step clear.</h2><p>Open the chapter you need, study the lesson, and return to any topic for review. Each path keeps track of your own progress.</p><a class="text-link" href="#study-paths">Choose a study path</a></div>
     <div class="steps"><div class="step"><div class="step-number">01</div><div><b>Learn the character</b><small>See a kana or everyday kanji card.</small></div><span class="step-tag">MEMORIZE</span></div><div class="step"><div class="step-number">02</div><div><b>Choose its reading</b><small>Recall it from a set of answers.</small></div><span class="step-tag">PRACTICE</span></div><div class="step"><div class="step-number">03</div><div><b>Use it in context</b><small>Read a scene and find the details.</small></div><span class="step-tag">UNDERSTAND</span></div></div>
   </div></section>
   <section class="wrap quote"><p>「毎日、少しずつ。」<br>Little by little, every day.</p><span>A good place to begin is one small lesson.</span></section>
   <section class="wrap section" style="padding-top:0"><div class="section-head"><div class="eyebrow">A few quick answers</div><h2>Made for a calm start</h2></div><div class="faq"><article><h3>Do I need to know Japanese already?</h3><p>No. The course starts with script introductions and kana flashcards, then introduces everyday kanji and beginner readings.</p></article><article><h3>What level does the course cover?</h3><p>The path starts with kana and N5 foundations, then includes selected N4 grammar and reading material. It does not cover N3–N1 and is not a complete JLPT syllabus.</p></article><article><h3>Will my progress follow me to another device?</h3><p>Progress is saved in this browser on this device. To move it, open Stats in the lesson app and copy a backup code, then paste it on the other device.</p></article><article><h3>How do I begin?</h3><p>Open a chapter, choose a lesson, and study at your own pace. Chapters can be collapsed, and completed lessons stay available for review.</p></article></div></section>
-  <section class="wrap cta-panel"><div><h2>Ready for your first small win?</h2><p>Start with the sounds. Keep going at your own pace.</p></div><a class="button" href="JLPT_Reading_Quest.html">Start learning <span aria-hidden="true">→</span></a></section>
+  <section class="wrap cta-panel"><div><h2>Ready to start?</h2><p>Start with the sounds. Keep going at your own pace.</p></div><a class="button" href="#study-paths">Choose a study path</a></section>
 </main>
-<footer class="wrap footer"><span>© <span id="year">2026</span> 生き甲斐 Quest · A little Japanese, one step at a time.</span><span class="footer-links"><a href="support.html">Support this project</a><a href="JLPT_Reading_Quest.html">Go to the course →</a></span></footer>
+<footer class="wrap footer"><span>© <span id="year">2026</span> 生き甲斐 Quest · A little Japanese, one step at a time.</span><span class="footer-links"><a href="support.html">Support this project</a><a href="#study-paths">Study paths</a></span></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();let sampleChoice=null;function selectSample(button){sampleChoice=button;document.querySelectorAll('.sample-choice').forEach(x=>x.classList.toggle('selected',x===button));document.getElementById('sampleFeedback').className='';document.getElementById('sampleFeedback').textContent='Ready when you are.'}function checkSample(){const feedback=document.getElementById('sampleFeedback');if(!sampleChoice){feedback.textContent='Choose an answer first.';feedback.className='bad';return}const correct=sampleChoice.dataset.correct==='true';feedback.textContent=correct?'Correct! 水 (みず) means water. Nice reading.':'Not quite. The clue is 水 (みず), which means water. Try another choice.';feedback.className=correct?'good':'bad'}</script>
 <script src="feedback-config.js"></script><script src="feedback-widget.js"></script>
 </body>
