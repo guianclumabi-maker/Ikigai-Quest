@@ -1,0 +1,100 @@
+// Continuation of the original JFT-Basic A2 course expansion.
+(() => {
+  'use strict';
+  const course = window.ikigaiJft;
+  const E = (ja, en, note) => [ja, en, note];
+  const Q = (prompt, choices, answer, why, skill = 'Reading') => ({ prompt, choices, answer, why, skill });
+  const chapters = [
+    {
+      id: 22, title: 'Cooking together', goal: 'Follow a simple recipe and divide the work.',
+      scene: 'You and a friend are preparing dinner for four people.',
+      teach: '〜ながら means doing two actions at the same time. It follows the ます-stem: 切りながら. For steps in order, use a て-form or 〜てから instead.',
+      words: [['材料（ざいりょう）','ingredients'],['切（き）る','to cut'],['混（ま）ぜる','to mix'],['焼（や）く','to grill'],['大（おお）さじ','tablespoon'],['半分（はんぶん）','half']],
+      examples: [E('野菜（やさい）を切（き）ってください。','Please cut the vegetables.','The て-form makes a direct, polite request with ください.'),E('肉（にく）を焼（や）きながら、野菜（やさい）を混（ま）ぜます。','Mix the vegetables while grilling the meat.','焼き is the ます-stem before ながら; the actions overlap.'),E('玉（たま）ねぎを二個（にこ）使（つか）います。','Use two onions.','二個 is a counter for small objects.'),E('塩（しお）を大（おお）さじ一杯（いっぱい）入（い）れます。','Add one tablespoon of salt.','大さじ specifies the spoon measure; 一杯 counts a full spoon.'),E('半分（はんぶん）はあとで使（つか）います。','Use half later.','あとで places the later action in time.'),E('先（さき）に手（て）を洗（あら）いましょう。','Let’s wash our hands first.','先に identifies the first action.'),E('水（みず）を入（い）れてから、火（ひ）をつけます。','Add water, then turn on the heat.','てから makes the order explicit.'),E('五分（ごふん）ぐらい煮（に）てください。','Simmer it for about five minutes.','ぐらい makes the duration approximate.'),E('熱（あつ）いので、気（き）をつけてください。','It is hot, so please be careful.','ので gives the reason for the warning.'),E('味（あじ）を見（み）てもいいですか。','May I taste it?','てもいいですか asks permission.')],
+      passage: ['Dinner plan','四人分（よにんぶん）のスープを作（つく）ります。<br>玉（たま）ねぎ二個（にこ）とにんじん一本（いっぽん）を切（き）ってください。<br>野菜（やさい）を煮（に）ながら、パンを温（あたた）めます。<br>塩（しお）は最後（さいご）に入（い）れます。'],
+      translation: 'Make soup for four. Cut two onions and one carrot. Warm the bread while simmering the vegetables. Add the salt last.',
+      script: [['A','私（わたし）は野菜（やさい）を切（き）ります。パンを温（あたた）めてもらえますか。','I will cut the vegetables. Could you warm the bread?'],['B','はい。スープを煮（に）ながら温（あたた）めます。','Sure. I will warm it while the soup simmers.']],
+      checks: [Q('How many people is the soup for?',['Two','Four','Six'],1,'四人分 means four servings.'),Q('How many carrots are needed?',['One','Two','Four'],0,'にんじん一本 is one carrot.'),Q('When is the salt added?',['At the start','While cutting','At the end'],2,'最後に means at the end.'),Q('What does B agree to warm?',['Soup','Bread','Vegetables'],1,'The request is パンを温めてもらえますか.','Listening')],
+      task: ['Explain who will cut the vegetables and who will warm the bread.','私（わたし）は野菜（やさい）を切（き）ります。あなたはパンを温（あたた）めてください。']
+    },
+    {
+      id: 23, title: 'Food restrictions', goal: 'Explain an allergy and request a safe substitution.',
+      scene: 'You are ordering lunch and must check the ingredients before you eat.',
+      teach: '〜ないでください requests that someone not do an action. 〜てもいいですか asks whether an alternative is permitted. An allergy requires clear confirmation; do not assume an ingredient is absent because it is not visible.',
+      words: [['アレルギー','allergy'],['小麦（こむぎ）','wheat'],['卵（たまご）','egg'],['材料（ざいりょう）','ingredient'],['抜（ぬ）く','to leave out'],['別（べつ）','separate']],
+      examples: [E('卵（たまご）のアレルギーがあります。','I have an egg allergy.','の connects the allergen with アレルギー.'),E('この料理（りょうり）に卵（たまご）は入（はい）っていますか。','Does this dish contain egg?','に marks the dish being checked; 入っています asks about its contents.'),E('卵（たまご）を入（い）れないでください。','Please do not add egg.','The ない-form plus でください makes a negative request.'),E('小麦（こむぎ）を使（つか）っていますか。','Do you use wheat?','使っています asks about an ingredient used in the dish.'),E('ソースは別（べつ）にできますか。','Can the sauce be served separately?','別に asks for separation.'),E('肉（にく）の代（か）わりに豆腐（とうふ）を使（つか）えますか。','Can you use tofu instead of meat?','の代わりに identifies the item being replaced.'),E('材料（ざいりょう）を確認（かくにん）してもらえますか。','Could you check the ingredients?','てもらえますか asks someone to do the checking.'),E('食（た）べる前（まえ）に教（おし）えてください。','Please tell me before I eat.','Dictionary form plus 前に gives the timing.'),E('このパンには小麦（こむぎ）が入（はい）っています。','This bread contains wheat.','には highlights which item contains the ingredient.'),E('大丈夫（だいじょうぶ）かどうか確認（かくにん）します。','I will check whether it is safe.','かどうか means whether or not.')],
+      passage: ['Lunch counter notice','カレーには小麦（こむぎ）と牛乳（ぎゅうにゅう）を使（つか）っています。<br>サラダのソースには卵（たまご）が入（はい）っています。<br>アレルギーがある方（かた）は、注文（ちゅうもん）の前（まえ）に店員（てんいん）に相談（そうだん）してください。'],
+      translation: 'The curry contains wheat and milk. The salad dressing contains egg. Customers with allergies should speak to staff before ordering.',
+      script: [['Customer','卵（たまご）のアレルギーがあります。ソースをかけないでください。','I have an egg allergy. Please do not put dressing on it.'],['Staff','わかりました。材料（ざいりょう）をもう一度（いちど）確認（かくにん）します。','Understood. I will check the ingredients again.']],
+      checks: [Q('Which item has egg in its sauce?',['Curry','Salad','Rice'],1,'サラダのソースには卵が入っています.'),Q('What does the curry contain?',['Wheat and milk','Egg and fish','Only vegetables'],0,'小麦と牛乳 are named.'),Q('When should a customer with an allergy speak to staff?',['Before ordering','After eating','When leaving'],0,'注文の前に means before ordering.'),Q('What does the staff promise to do?',['Change the menu','Check ingredients again','Cancel the order'],1,'もう一度確認します means check again.','Listening')],
+      task: ['Tell a restaurant worker about an egg allergy and ask them not to add dressing.','卵（たまご）のアレルギーがあります。ソースをかけないでください。']
+    },
+    {
+      id: 24, title: 'Booking a trip', goal: 'Compare travel options and confirm a reservation.',
+      scene: 'You are arranging a weekend trip and checking seats and cancellation rules.',
+      teach: '〜ほうがいいです offers advice. After a verb, use the past plain form for positive advice: 予約したほうがいいです. With negative advice, use the ない-form: 遅れないほうがいいです.',
+      words: [['予約（よやく）','reservation'],['空席（くうせき）','available seat'],['片道（かたみち）','one-way'],['往復（おうふく）','round trip'],['取消（とりけし）','cancellation'],['料金（りょうきん）','fee']],
+      examples: [E('土曜日（どようび）のバスを予約（よやく）したいです。','I want to reserve a Saturday bus.','予約したい expresses the speaker’s wish.'),E('早（はや）めに予約（よやく）したほうがいいです。','You should book early.','Past plain form plus ほうがいい gives positive advice.'),E('遅（おく）れないほうがいいです。','You should not be late.','The ない-form plus ほうがいい gives negative advice.'),E('空席（くうせき）はありますか。','Are there seats available?','あります asks whether an inanimate thing exists.'),E('片道（かたみち）の料金（りょうきん）はいくらですか。','How much is a one-way fare?','片道 specifies the fare type.'),E('往復（おうふく）の切符（きっぷ）を一枚（いちまい）ください。','One round-trip ticket, please.','一枚 counts flat tickets.'),E('出発（しゅっぱつ）は午前（ごぜん）八時（はちじ）です。','Departure is at 8 a.m.','午前 distinguishes morning from evening.'),E('取消（とりけし）は前日（ぜんじつ）までできます。','You can cancel until the previous day.','まで states the latest permitted time.'),E('名前（なまえ）を確認（かくにん）してください。','Please confirm the name.','を marks the item to verify.'),E('予約番号（よやくばんごう）を控（ひか）えてください。','Please write down the reservation number.','控える means to keep a note for later.')],
+      passage: ['Bus booking notice','海（うみ）行（い）きバス：土曜日（どようび）午前（ごぜん）八時（はちじ）出発（しゅっぱつ）。片道（かたみち）二千円（にせんえん）。<br>日曜日（にちようび）午前（ごぜん）九時（くじ）出発（しゅっぱつ）。片道（かたみち）千八百円（せんはっぴゃくえん）。<br>取消（とりけし）は出発（しゅっぱつ）の前日（ぜんじつ）まで無料（むりょう）です。'],
+      translation: 'The seaside bus leaves Saturday at 8 a.m. for ¥2,000 one way or Sunday at 9 a.m. for ¥1,800. Cancellation is free until the day before departure.',
+      script: [['Traveler','土曜日（どようび）の八時（はちじ）のバスに空席（くうせき）はありますか。','Are seats available on Saturday’s 8 o’clock bus?'],['Agent','はい、二席（にせき）あります。予約（よやく）しますか。','Yes, two seats remain. Would you like to reserve?']],
+      checks: [Q('Which bus is cheaper?',['Saturday','Sunday','They cost the same'],1,'Sunday costs ¥1,800; Saturday costs ¥2,000.'),Q('When does the Saturday bus leave?',['8 a.m.','9 a.m.','8 p.m.'],0,'土曜日午前八時出発.'),Q('Until when is cancellation free?',['Departure day','The day before departure','One week before'],1,'前日まで無料 means free until the previous day.'),Q('How many Saturday seats remain?',['One','Two','Three'],1,'二席あります.','Listening')],
+      task: ['Ask whether a Saturday seat is available and say you want to reserve it.','土曜日（どようび）のバスに空席（くうせき）はありますか。一席（いっせき）予約（よやく）したいです。']
+    },
+    {
+      id: 25, title: 'Travel changes', goal: 'Find a replacement route after a delay or cancellation.',
+      scene: 'A train service is suspended and you must read an updated timetable.',
+      teach: '〜ため and 〜ので can give a reason. In public notices, 〜のため is common for disruptions. Distinguish 運休, a canceled service, from 遅延, a service that runs late.',
+      words: [['運休（うんきゅう）','service cancellation'],['遅延（ちえん）','delay'],['代行（だいこう）バス','replacement bus'],['乗（の）り場（ば）','boarding point'],['到着（とうちゃく）','arrival'],['変更（へんこう）','change']],
+      examples: [E('大雨（おおあめ）のため、電車（でんしゃ）は運休（うんきゅう）です。','Trains are canceled because of heavy rain.','のため introduces the reason in a formal notice.'),E('電車（でんしゃ）が遅（おく）れているので、バスで行（い）きます。','The train is late, so I will go by bus.','ので connects the reason with the decision.'),E('代行（だいこう）バスは北口（きたぐち）から出（で）ます。','The replacement bus leaves from the north exit.','から marks the departure point.'),E('乗（の）り場（ば）が変（か）わりました。','The boarding point has changed.','が identifies what changed.'),E('次（つぎ）のバスは十分後（じゅっぷんご）です。','The next bus is in ten minutes.','後 after a duration means from now.'),E('到着（とうちゃく）は三十分（さんじゅっぷん）遅（おく）れます。','Arrival will be thirty minutes late.','The duration states the amount of delay.'),E('新（あたら）しい時刻表（じこくひょう）を確認（かくにん）してください。','Please check the new timetable.','を marks what should be checked.'),E('この切符（きっぷ）でバスに乗（の）れます。','You can board the bus with this ticket.','で marks the means; 乗れます expresses ability.'),E('駅員（えきいん）に聞（き）いてください。','Please ask station staff.','に marks the person asked.'),E('出発（しゅっぱつ）する前（まえ）に連絡（れんらく）します。','I will contact you before departure.','Dictionary form plus 前に sets the time.')],
+      passage: ['Service update','大雨（おおあめ）のため、中央線（ちゅうおうせん）は午後（ごご）三時（さんじ）まで運休（うんきゅう）です。<br>代行（だいこう）バスは駅（えき）の北口（きたぐち）二番（にばん）乗（の）り場（ば）から出（で）ます。<br>午後（ごご）一時（いちじ）と一時半（いちじはん）に出発（しゅっぱつ）します。同（おな）じ切符（きっぷ）で乗（の）れます。'],
+      translation: 'The Central Line is suspended until 3 p.m. because of heavy rain. Replacement buses leave from stop 2 at the station’s north exit at 1:00 and 1:30 p.m. The same ticket is valid.',
+      script: [['Announcement','次（つぎ）の代行（だいこう）バスは一時半（いちじはん）です。乗（の）り場（ば）は北口（きたぐち）二番（にばん）です。','The next replacement bus is at 1:30. Its stop is number 2 at the north exit.']],
+      checks: [Q('Until when is the Central Line suspended?',['1 p.m.','1:30 p.m.','3 p.m.'],2,'午後三時まで運休.'),Q('Where does the replacement bus leave?',['North exit, stop 2','South exit, stop 2','North exit, stop 3'],0,'北口二番乗り場.'),Q('Do you need a new ticket?',['Yes','No','Only on weekends'],1,'同じ切符で乗れます.'),Q('What time is the next bus in the announcement?',['1:00','1:30','3:00'],1,'一時半 means 1:30.','Listening')],
+      task: ['Tell a coworker where and when to take the next replacement bus.','次（つぎ）の代行（だいこう）バスは午後（ごご）一時半（いちじはん）に北口（きたぐち）二番（にばん）から出（で）ます。']
+    },
+    {
+      id: 26, title: 'At the doctor', goal: 'Describe symptoms, their duration, and ask what to do next.',
+      scene: 'You visit a clinic after feeling unwell for two days.',
+      teach: '〜んです gives background for an explanation or question: 頭が痛いんです. 〜てから locates the start of a condition or the next action. Give the symptom and how long it has lasted.',
+      words: [['頭痛（ずつう）','headache'],['熱（ねつ）','fever'],['咳（せき）','cough'],['昨日（きのう）から','since yesterday'],['診察（しんさつ）','medical examination'],['保険証（ほけんしょう）','insurance card']],
+      examples: [E('昨日（きのう）から頭（あたま）が痛（いた）いんです。','I have had a headache since yesterday.','んです presents the symptom as context for the visit.'),E('熱（ねつ）が三十八度（さんじゅうはちど）あります。','I have a fever of 38 degrees.','あります states the measured temperature.'),E('咳（せき）が二日（ふつか）続（つづ）いています。','I have been coughing for two days.','続いています describes a continuing condition.'),E('いつから具合（ぐあい）が悪（わる）いですか。','Since when have you felt unwell?','いつから asks when the condition began.'),E('朝（あさ）ご飯（はん）を食（た）べてから、薬（くすり）を飲（の）みました。','I took medicine after breakfast.','てから fixes the order of eating and taking medicine.'),E('のども痛（いた）いです。','My throat also hurts.','も adds another symptom.'),E('保険証（ほけんしょう）を持（も）ってきました。','I brought my insurance card.','持ってきました means brought it here.'),E('今日（きょう）診（み）てもらえますか。','Could I be seen today?','てもらえますか asks for a service.'),E('薬（くすり）のアレルギーはありません。','I do not have a medicine allergy.','ありません is a clear negative response.'),E('いつ仕事（しごと）に戻（もど）れますか。','When can I return to work?','戻れますか asks about ability or permission to return.')],
+      passage: ['Clinic hours','診察（しんさつ）は月曜日（げつようび）から金曜日（きんようび）まで、午前（ごぜん）九時（くじ）から正午（しょうご）までです。<br>午後（ごご）は三時（さんじ）から六時（ろくじ）までです。<br>初（はじ）めての方（かた）は保険証（ほけんしょう）を持（も）って、終了（しゅうりょう）の三十分前（さんじゅっぷんまえ）までに受付（うけつけ）に来（き）てください。'],
+      translation: 'Appointments are Monday to Friday, 9 a.m.–noon and 3–6 p.m. New patients should bring an insurance card and reach reception at least 30 minutes before closing.',
+      script: [['Patient','昨日（きのう）から熱（ねつ）があるんです。咳（せき）も出（で）ます。','I have had a fever since yesterday. I am coughing too.'],['Staff','わかりました。保険証（ほけんしょう）を出（だ）してください。','Understood. Please show your insurance card.']],
+      checks: [Q('When does the afternoon session begin?',['Noon','3 p.m.','6 p.m.'],1,'午後は三時から.'),Q('What should a first-time patient bring?',['An insurance card','A train ticket','A receipt'],0,'保険証を持って.'),Q('How early must a new patient reach reception?',['At least 10 minutes before closing','At least 30 minutes before closing','After closing'],1,'終了の三十分前までに.'),Q('How long has the patient had a fever?',['Since yesterday','For a week','Since this morning'],0,'昨日から熱があるんです.','Listening')],
+      task: ['Tell the receptionist your two symptoms and when they started.','昨日（きのう）から熱（ねつ）があるんです。咳（せき）も出（で）ます。']
+    },
+    {
+      id: 27, title: 'Medicine and follow-up', goal: 'Read dosage instructions and confirm when to take medicine.',
+      scene: 'A pharmacist gives you two medicines with different directions.',
+      teach: '食前 means before a meal; 食後 means after a meal. 一日三回 is three times per day, not three tablets at once. Ask for clarification whenever a dose or timing is uncertain.',
+      words: [['食前（しょくぜん）','before a meal'],['食後（しょくご）','after a meal'],['一回（いっかい）','one time or dose'],['一錠（いちじょう）','one tablet'],['眠（ねむ）くなる','to become sleepy'],['再診（さいしん）','follow-up visit']],
+      examples: [E('この薬（くすり）は食後（しょくご）に飲（の）みます。','Take this medicine after a meal.','食後に specifies the timing.'),E('一日（いちにち）三回（さんかい）、一回（いっかい）一錠（いちじょう）です。','Take one tablet per dose, three times a day.','三回 counts doses; 一錠 is the amount at each dose.'),E('朝（あさ）と夜（よる）に飲（の）んでください。','Please take it in the morning and at night.','と joins the two dose times.'),E('食前（しょくぜん）に飲（の）む薬（くすり）もあります。','There is also a medicine to take before meals.','食前 contrasts with 食後.'),E('水（みず）と一緒（いっしょ）に飲（の）んでください。','Please take it with water.','と一緒に marks what accompanies the medicine.'),E('飲（の）んだあとで眠（ねむ）くなるかもしれません。','You may become sleepy after taking it.','かもしれません gives a possible effect.'),E('車（くるま）を運転（うんてん）しないでください。','Please do not drive.','ないでください is a negative instruction.'),E('何日間（なんにちかん）飲（の）めばいいですか。','For how many days should I take it?','何日間 asks for the duration.'),E('来週（らいしゅう）、もう一度（いちど）来（き）てください。','Please come back next week.','もう一度 asks for another visit.'),E('具合（ぐあい）が悪（わる）くなったら、電話（でんわ）してください。','If you feel worse, please call.','たら gives the condition for calling.')],
+      passage: ['Medicine label','白（しろ）い薬（くすり）：一日（いちにち）三回（さんかい）、食後（しょくご）に一回（いっかい）一錠（いちじょう）。<br>青（あお）い薬（くすり）：寝（ね）る前（まえ）に一回（いっかい）一錠（いちじょう）。<br>青（あお）い薬（くすり）を飲（の）んだあと、車（くるま）を運転（うんてん）しないでください。'],
+      translation: 'White tablets: one tablet after meals, three times daily. Blue tablets: one tablet before bed. Do not drive after taking the blue tablet.',
+      script: [['Patient','白（しろ）い薬（くすり）は一度（いちど）に三錠（さんじょう）ですか。','Do I take three white tablets at once?'],['Pharmacist','いいえ。一回（いっかい）一錠（いちじょう）で、一日（いちにち）三回（さんかい）です。','No. One tablet at a time, three times a day.']],
+      checks: [Q('When is the white tablet taken?',['Before meals','After meals','Before bed only'],1,'食後に is after meals.'),Q('How many white tablets per dose?',['One','Two','Three'],0,'一回一錠 is one per dose.'),Q('Which tablet has the driving warning?',['White','Blue','Both'],1,'The warning names 青い薬.'),Q('What misunderstanding does the pharmacist correct?',['Taking three tablets at once','Taking it with water','Taking it after meals'],0,'The patient asks 一度に三錠ですか.','Listening')],
+      task: ['Repeat the white-tablet directions to the pharmacist.','白（しろ）い薬（くすり）は一回（いっかい）一錠（いちじょう）、一日（いちにち）三回（さんかい）、食後（しょくご）ですね。']
+    },
+    {
+      id: 28, title: 'Neighbors and manners', goal: 'Make a respectful request and respond to a building rule.',
+      scene: 'A neighbor asks you about noise and shared spaces in your building.',
+      teach: '〜ていただけませんか is a respectful way to request an action. Start with すみません and give the reason briefly. 〜ないでください is clear but more direct; choose it for signs and rules.',
+      words: [['近所（きんじょ）','neighborhood'],['騒音（そうおん）','noise'],['廊下（ろうか）','corridor'],['共用（きょうよう）','shared use'],['迷惑（めいわく）','inconvenience'],['片付（かたづ）ける','to tidy up']],
+      examples: [E('夜（よる）は静（しず）かにしていただけませんか。','Could you please keep the noise down at night?','ていただけませんか softens the request respectfully.'),E('廊下（ろうか）に物（もの）を置（お）かないでください。','Please do not leave things in the corridor.','ないでください is the direct rule printed on a notice.'),E('ご迷惑（めいわく）をおかけして、すみません。','I am sorry for the inconvenience.','This set phrase apologizes for causing trouble.'),E('すぐに片付（かたづ）けます。','I will clear it away right away.','すぐに makes the promised timing explicit.'),E('共用（きょうよう）の場所（ばしょ）はきれいに使（つか）いましょう。','Let’s keep shared areas clean.','ましょう makes a collective suggestion.'),E('ごみは朝（あさ）八時（はちじ）までに出（だ）します。','Put rubbish out by 8 a.m.','までに marks the deadline.'),E('音（おと）が大（おお）きかったでしょうか。','Was the sound too loud?','でしょうか makes the question somewhat gentle.'),E('窓（まど）を閉（し）めていただけますか。','Could you close the window?','ていただけますか is another respectful request.'),E('今夜（こんや）は友達（ともだち）が来（き）ます。','Friends are coming tonight.','が identifies who is coming.'),E('九時（くじ）までに終（お）わります。','We will finish by nine.','までに promises a latest finishing time.')],
+      passage: ['Building rules','廊下（ろうか）と階段（かいだん）は共用（きょうよう）の場所（ばしょ）です。物（もの）を置（お）かないでください。<br>夜（よる）十時（じゅうじ）から朝（あさ）七時（しちじ）までは、大（おお）きな音（おと）を出（だ）さないでください。<br>ごみは収集日（しゅうしゅうび）の朝（あさ）八時（はちじ）までに出（だ）してください。'],
+      translation: 'The corridor and stairs are shared spaces; do not leave things there. Avoid loud noise from 10 p.m. to 7 a.m. Put out rubbish by 8 a.m. on collection day.',
+      script: [['Neighbor','すみません。夜（よる）はもう少（すこ）し静（しず）かにしていただけませんか。','Excuse me. Could you please be a little quieter at night?'],['Resident','すみません。気（き）をつけます。','I am sorry. I will be careful.']],
+      checks: [Q('Where must you not leave things?',['Inside your own room','In the corridor and stairs','At the rubbish area'],1,'The shared corridor and stairs must remain clear.'),Q('When do quiet hours start?',['7 a.m.','8 p.m.','10 p.m.'],2,'夜十時から.'),Q('When is the rubbish deadline?',['7 a.m.','8 a.m.','10 p.m.'],1,'朝八時までに.'),Q('What does the neighbor ask for?',['Less noise at night','Help moving a box','A key'],0,'静かにしていただけませんか asks for quiet.','Listening')],
+      task: ['Apologize for noise and promise to finish before nine.','ご迷惑（めいわく）をおかけして、すみません。九時（くじ）までに終（お）わります。']
+    },
+  ];
+  for (const lesson of chapters) {
+    const expressionChecks = lesson.examples.slice(0, 6).map((example, i) =>
+      Q(`Which meaning matches 「${example[0]}」?`, [example[1], lesson.examples[(i + 3) % 10][1], lesson.examples[(i + 6) % 10][1]], 0, example[2], 'Expression'));
+    lesson.questions = [...lesson.checks, ...expressionChecks];
+    delete lesson.checks;
+    course.lessons.push(lesson);
+  }
+})();

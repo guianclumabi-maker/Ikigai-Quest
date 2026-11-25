@@ -8,6 +8,10 @@
     { name: 'Start from zero', description: 'The writing systems, introductions, and everyday numbers', ids: [1, 2, 3, 4] },
     { name: 'Daily errands', description: 'Shops, food, transport, and your neighborhood', ids: [5, 6, 7, 8, 9] },
     { name: 'Life and work', description: 'Work, health, housing, and your community', ids: [10, 11, 12, 13, 14, 15] },
+    { name: 'Plans and participation', description: 'Weather, places, directions, hobbies, and classes', ids: [16, 17, 18, 19, 20, 21] },
+    { name: 'Food, travel, and health', description: 'Cooking, restrictions, bookings, changes, and care', ids: [22, 23, 24, 25, 26, 27] },
+    { name: 'Community and work', description: 'Manners, events, handovers, problems, and safety', ids: [28, 29, 30, 31, 32, 33] },
+    { name: 'Your next steps', description: 'Progress, future goals, and information search', ids: [34, 35, 36] },
   ];
   const storageKey = 'ikigaiJftProgressV1';
   let state = { done: [], best: {}, mockBest: {}, attempts: {}, last: null, furigana: true };
@@ -66,7 +70,7 @@
   }
 
   function downloadLink() {
-    return `<a class="button" href="${workbook}" download>Download workbook</a>`;
+    return `<a class="button" href="${workbook}" download>Download starter workbook</a>`;
   }
 
   function setHeading(element, focus) {
@@ -119,8 +123,8 @@
         <p class="muted">${escape(next.title)} · ${escape(next.goal)}</p>
         <a class="button strong" href="${resumeHref}">${resume}</a>
       </section>
-      <section class="paper-card"><h2>Learn on paper, too.</h2><p>Download the free workbook for all lessons, scripts, and practice exams.</p>${downloadLink()}</section>
-      <section class="exambox"><p class="label">CHAPTER 16</p><h2>JFT-Basic practice exams</h2>
+      <section class="paper-card"><h2>Learn on paper, too.</h2><p>The free starter workbook covers chapters 1–15 and the original practice exams. New chapters 16–36 are available here in the app.</p>${downloadLink()}</section>
+      <section class="exambox"><p class="label">EXAM PRACTICE</p><h2>JFT-Basic practice exams</h2>
         <p>Try two original tests with 48 questions each. Get explanations and a breakdown by section after you submit.</p>
         <a class="button strong" href="#exams">Open exam practice</a>
       </section></aside></div>`;
@@ -360,7 +364,7 @@
   function showExamMenu() {
     reader.innerHTML = `<div class="reader-top"><a href="#chapters">All JFT-Basic chapters</a>${downloadLink()}</div>
       <article class="sheet exam-layout">
-        <p class="label">CHAPTER 16</p><h1 id="reader-heading" tabindex="-1">JFT-Basic practice exams</h1>
+        <p class="label">EXAM PRACTICE</p><h1 id="reader-heading" tabindex="-1">JFT-Basic practice exams</h1>
         <p>Each mock has 48 original questions and a 60-minute timer. You’ll get your score and explanations at the end.</p>
         <p>For listening practice, have a partner read each script while you listen. The script is available to open separately for self-study.</p>
         ${exams.map(exam => `<section><h2>Mock ${exam.id.toUpperCase()}</h2>
