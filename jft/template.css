@@ -120,19 +120,25 @@ body { background: var(--paper); }
 .catalog-heading span { color: var(--muted); font-size: .78rem; }
 .catalog details { overflow: hidden; margin-bottom: 12px; background: var(--white); border-color: var(--line); border-radius: 12px; }
 .catalog summary {
-  min-height: 72px;
-  display: flex;
-  padding: 17px 18px;
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto 1rem;
+  column-gap: 14px;
+  align-items: center;
+  padding: 13px 18px;
   color: var(--ink);
 }
 .catalog summary::before { display: none; }
-.catalog summary::after { content: '+'; margin-left: 8px; font-size: 1rem; color: var(--green); }
+.catalog summary::after { content: '+'; margin-left: 0; justify-self: end; font-size: 1rem; color: var(--green); }
 .catalog details[open] summary::after { content: '−'; }
-.stage-index { flex: 0 0 30px; font: 600 .78rem 'DM Mono', monospace; color: var(--green); }
-.stage-name { display: grid; gap: 3px; margin-right: auto; }
+.catalog summary span.stage-index { margin-right: 0; font: 600 .78rem 'DM Mono', monospace; color: var(--green); }
+.stage-name { min-width: 0; display: grid; gap: 3px; margin-right: 0; }
 .stage-name strong { font-size: .97rem; }
-.stage-name small { font-size: .77rem; }
+.stage-name small { font-size: .77rem; line-height: 1.4; }
 .stage-progress { white-space: nowrap; color: var(--muted); font-size: .75rem; font-weight: 500; }
+.catalog summary:hover, .catalog summary:focus-visible { background: var(--soft); }
+.catalog summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+.catalog details[open] summary { border-bottom: 1px solid var(--line); }
 .chapter-list { padding: 0; }
 .chapter-list li { border-color: var(--line); }
 .chapter-list a { grid-template-columns: 2.2rem minmax(0, 1fr) auto; min-height: 77px; padding: 10px 17px; }
@@ -196,6 +202,7 @@ body { background: var(--paper); }
   .study-progress { flex-wrap: wrap; gap: .6rem; }
   .study-progress span:first-child { width: 100%; }
   .stage-progress { display: none; }
+  .catalog summary { grid-template-columns: 1.75rem minmax(0, 1fr) 1rem; gap: 10px; padding-inline: 12px; }
   .chapter-list a { grid-template-columns: 35px minmax(0, 1fr); }
   .completed { grid-column: 2; }
 }
