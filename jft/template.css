@@ -148,7 +148,9 @@ body { background: var(--paper); }
 .chapter-title { font-size: .9rem; }
 .chapter-goal { font-size: .78rem; line-height: 1.4; }
 .completed { font-size: .75rem; }
-.home-rail { display: grid; gap: 12px; }
+.home-flow { max-width: 68rem; margin-inline: auto; }
+.home-rail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.home-rail .exambox { grid-column: 1 / -1; }
 .resume-card, .paper-card, .home-rail .exambox {
   display: block;
   margin: 0;
@@ -157,10 +159,11 @@ body { background: var(--paper); }
   border-radius: 12px;
   box-shadow: none;
 }
-.resume-card { background: #e5f3ed; }
+.resume-card { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; max-width: 68rem; margin: 0 auto 28px; background: #e5f3ed; }
 .resume-card h2 { margin: .55rem 0 .75rem; font-size: 1.35rem; line-height: 1.35; }
-.resume-card .muted { margin-bottom: 1rem !important; font-size: .83rem; }
-.resume-card .button, .home-rail .exambox .button { width: 100%; font-size: .8rem; }
+.resume-card .muted { margin-bottom: 0 !important; font-size: .83rem; }
+.resume-card .button { flex: 0 0 auto; font-size: .85rem; }
+.home-rail .exambox .button { font-size: .8rem; }
 .paper-card { background: var(--white); }
 .paper-card h2, .home-rail .exambox h2 { font-size: 1.08rem; }
 .paper-card p, .home-rail .exambox p { font-size: .8rem; line-height: 1.5; color: var(--muted); }
@@ -176,7 +179,6 @@ body { background: var(--paper); }
   .study-nav a { font-size: .83rem; }
   .sidebar-note { padding: 13px 10px; }
   .shell, .path-switch { width: calc(100% - 2rem); }
-  .home-grid { grid-template-columns: minmax(0, 1fr) 210px; gap: 12px; }
   .resume-card, .paper-card, .home-rail .exambox { padding: 14px; }
 }
 @media (max-width: 740px) {
@@ -193,11 +195,12 @@ body { background: var(--paper); }
   .cover { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .cover-japanese { display: none; }
   .study-progress > small:last-child { display: none; }
-  .home-grid { grid-template-columns: minmax(0, 1fr); }
   .home-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-rail .exambox { grid-column: 1 / -1; }
 }
 @media (max-width: 470px) {
+  .resume-card { display: block; }
+  .resume-card .button { margin-top: 12px; width: 100%; }
   .home-rail { grid-template-columns: 1fr; }
   .study-progress { flex-wrap: wrap; gap: .6rem; }
   .study-progress span:first-child { width: 100%; }

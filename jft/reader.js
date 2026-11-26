@@ -4,6 +4,9 @@
   const reader = document.querySelector('#reader');
   const workbook = 'pdf/Ikigai_Quest_JFT_Basic_A2_Learner_Workbook.pdf';
   const title = 'Japanese for Life in Japan';
+  const audioFiles = new Set(window.ikigaiJftAudio || []);
+  let activeAudio = null;
+  let activeAudioId = null;
   const stages = [
     { name: 'Start from zero', description: 'The writing systems, introductions, and everyday numbers', ids: [1, 2, 3, 4] },
     { name: 'Daily errands', description: 'Shops, food, transport, and your neighborhood', ids: [5, 6, 7, 8, 9] },
@@ -42,6 +45,27 @@
   const lessonById = id => lessons.find(lesson => lesson.id === id);
   const number = n => String(n).padStart(2, '0');
   const lessonLink = (id, section) => `#chapter-${id}${recognizedSections.includes(section) ? '/' + section : ''}`;
+  function audioId(value) {
+    let hash = 2166136261;
+    for (let i = 0; i < value.length; i++) hash = Math.imul(hash ^ value.charCodeAt(i), 16777619) >>> 0;
+    return 'a' + hash.toString(16).padStart(8, '0');
+  }
+  function listenButton(value, label = 'Listen to the Japanese') {
+    const id = audioId(value);
+    return audioFiles.has(id) ? `<button class="listen-button" type="button" data-audio-id="${id}" aria-label="${escape(label)}">▶ Listen</button>` : '';
+  }
+  function stopAudio() {
+    if (activeAudio) activeAudio.pause();
+    activeAudio = null;
+    activeAudioId = null;
+    if (reader.querySelectorAll) reader.querySelectorAll('[data-audio-id]').forEach(button => {
+      button.classList.remove('is-playing');
+      button.textContent = '▶ Listen';
+    });
+  }
+  function continueTo(id, label) {
+    return `<div class="section-next"><span>Keep going</span><a href="${lessonLink(currentChapter, id)}">${label} →</a></div>`;
+  }
 
   function copy(value, addRuby = true) {
     const text = escape(value)
@@ -98,7 +122,13 @@
         <strong>${Math.round(done / lessons.length * 100)}%</strong>
         <small>Every journey begins with a first step.</small>
       </div>
-      <div class="home-grid"><section class="catalog" aria-labelledby="chapter-heading">
+      <section class="resume-card" aria-labelledby="next-heading">
+        <div><p class="label">${state.last ? 'PICK UP WHERE YOU LEFT OFF' : 'START HERE'}</p>
+        <h2 id="next-heading">${state.last ? escape(next.title) : 'Your first step starts with あ.'}</h2>
+        <p class="muted">${escape(next.title)} · ${escape(next.goal)}</p></div>
+        <a class="button strong" href="${resumeHref}">${resume}</a>
+      </section>
+      <div class="home-flow"><section class="catalog" aria-labelledby="chapter-heading">
         <div class="catalog-heading">
           <h2 id="chapter-heading">Your study path</h2><span>${lessons.length} chapters · ${stages.length} stages</span>
         </div>
@@ -116,13 +146,7 @@
             }).join('')}</ol></details>`;
         }).join('')}
         <p class="course-crosslink">Studying for the Japanese-Language Proficiency Test? <a href="JLPT_Reading_Quest.html">Open the JLPT N5/N4 course.</a></p>
-      </section><aside class="home-rail" aria-label="Study resources">
-      <section class="resume-card" aria-labelledby="next-heading">
-        <p class="label">${state.last ? 'PICK UP WHERE YOU LEFT OFF' : 'START HERE'}</p>
-        <h2 id="next-heading">${state.last ? escape(next.title) : 'Your first step starts with あ.'}</h2>
-        <p class="muted">${escape(next.title)} · ${escape(next.goal)}</p>
-        <a class="button strong" href="${resumeHref}">${resume}</a>
-      </section>
+      </section><aside class="home-rail" aria-label="After the chapters">
       <section class="paper-card"><h2>Learn on paper, too.</h2><p>The free starter workbook covers chapters 1–15 and the original practice exams. New chapters 16–36 are available here in the app.</p>${downloadLink()}</section>
       <section class="exambox"><p class="label">EXAM PRACTICE</p><h2>JFT-Basic practice exams</h2>
         <p>Try two original tests with 48 questions each. Get explanations and a breakdown by section after you submit.</p>
@@ -146,14 +170,14 @@
   function kanaChart(lesson) {
     return `<button class="button" id="kana-toggle" aria-pressed="false" type="button">Hide readings</button>
       <div class="kana-grid" id="kana-grid">${lesson.chart.flat().map(cell => cell
-        ? `<div class="kana-cell"><b lang="ja">${escape(cell[0])}</b><span class="kana-reading">${escape(cell[1])}</span></div>`
+        ? `<div class="kana-cell"><b lang="ja">${escape(cell[0])}</b><span class="kana-reading">${escape(cell[1])}</span>${listenButton(cell[0], `Hear ${cell[0]}`)}</div>`
         : '<div class="kana-cell blank" aria-hidden="true"></div>').join('')}</div>
       <p class="muted">${copy(lesson.clue)}</p>`;
   }
 
   function examples(lesson) {
     return `<ul class="examples">${lesson.examples.map(([ja, en, note]) => `<li>
-      <p class="japanese" lang="ja">${copy(ja)}</p><p><strong>${escape(en)}</strong></p>
+      <p class="japanese" lang="ja">${copy(ja)} ${listenButton(ja, `Listen to ${ja}`)}</p><p><strong>${escape(en)}</strong></p>
       <p class="muted">${copy(note)}</p></li>`).join('')}</ul>`;
   }
 
@@ -175,9 +199,10 @@
     if (!lesson.passage) return '';
     return `<section id="reading" aria-labelledby="reading-label"><h2 id="reading-label">Read</h2>
       <div class="passage"><h3>${escape(lesson.passage[0])}</h3>
-      <p class="japanese" lang="ja">${lesson.passage.slice(1).map(x => copy(x)).join('<br>')}</p>
+      <div class="passage-lines japanese" lang="ja">${lesson.passage.slice(1).flatMap(x => x.split(/<br\s*\/?\s*>/i)).map(x => `<p>${copy(x)} ${listenButton(x, 'Listen to this line')}</p>`).join('')}</div>
       ${lesson.id === 11 ? shiftTable() : ''}</div>
       <details><summary>Show translation</summary><div class="details-body"><p>${escape(lesson.translation)}</p></div></details>
+      ${continueTo('listening', 'Listen to the dialogue')}
     </section>`;
   }
 
@@ -243,25 +268,29 @@
           <nav aria-label="Lesson contents">${outline.map(([slug, label]) => `<a href="${lessonLink(id, slug)}">${label}</a>`).join('')}</nav>
         </details>
         <article class="sheet">
-          <p class="label">CHAPTER ${number(id)}</p>
+          <p class="label">CHAPTER ${number(id)} OF ${lessons.length}</p>
           <h1 id="reader-heading" tabindex="-1">${escape(lesson.title)}</h1>
           <p class="lede"><strong>After this chapter</strong> · ${escape(lesson.goal)}</p>
           <p>${copy(lesson.scene)}</p>
           <section id="words" aria-labelledby="words-label">
             <h2 id="words-label">${lesson.chart ? 'Meet the sounds' : 'Words for this situation'}</h2>
             ${lesson.chart ? kanaChart(lesson) : `<dl class="vocabulary">${lesson.words.map(([ja, en]) =>
-              `<div><dt class="japanese" lang="ja">${copy(ja)}</dt><dd>${escape(en)}</dd></div>`).join('')}</dl>`}
+              `<div><dt class="japanese" lang="ja">${copy(ja)} ${listenButton(ja, `Hear ${ja}`)}</dt><dd>${escape(en)}</dd></div>`).join('')}</dl>`}
             ${id === 4 ? reference() : ''}
+            ${continueTo('examples', 'Read the examples')}
           </section>
           <section id="examples" aria-labelledby="examples-label"><h2 id="examples-label">Worked examples</h2>
-            <p>${copy(lesson.teach)}</p>${examples(lesson)}</section>
+            <p>${copy(lesson.teach)}</p>${examples(lesson)}
+            ${continueTo(lesson.passage ? 'reading' : 'listening', lesson.passage ? 'Read a real-life text' : 'Listen to the dialogue')}</section>
           ${lessonPassage(lesson)}
-          <section id="listening" aria-labelledby="listening-label"><h2 id="listening-label">Listening script</h2>
-            <p>Ask a partner to read the script while you look away. Then answer the listening questions in the checkpoint. For self-study, you can read the script and check its meaning.</p>
+          <section id="listening" aria-labelledby="listening-label"><h2 id="listening-label">Listen to the dialogue</h2>
+            <p>Play each line and listen before opening the transcript. Then try the listening questions in the checkpoint.</p>
+            <div class="dialogue-audio">${lesson.script.map(([who, ja], i) => `<div><span>${escape(who)}</span>${listenButton(ja, `Play line ${i + 1} by ${who}`)}</div>`).join('')}</div>
             <details><summary>Open script and translation</summary><div class="details-body">${scriptContent(lesson.script)}</div></details>
+            ${continueTo('practice', 'Try the checkpoint')}
           </section>
           <section id="practice" aria-labelledby="practice-label"><h2 id="practice-label">Chapter checkpoint</h2>
-            <p>Choose one answer per question. You can retry the checkpoint as often as you like.</p>
+            <p>Choose one answer per question. You can retry the checkpoint as often as you like, then continue to the next chapter.</p>
             <p id="chapter-best" class="muted">${hadScore ? `Best score: ${state.best[id]} / ${lesson.questions.length}` : ''}</p>
             <form id="checkpoint">
               <fieldset class="checkpoint-items" id="checkpoint-items" aria-label="Checkpoint questions">${checkpointQuestions(lesson)}</fieldset>
@@ -366,7 +395,7 @@
       <article class="sheet exam-layout">
         <p class="label">EXAM PRACTICE</p><h1 id="reader-heading" tabindex="-1">JFT-Basic practice exams</h1>
         <p>Each mock has 48 original questions and a 60-minute timer. You’ll get your score and explanations at the end.</p>
-        <p>For listening practice, have a partner read each script while you listen. The script is available to open separately for self-study.</p>
+        <p>Listening sections include playable Japanese audio. Scripts and explanations appear after you submit the mock.</p>
         ${exams.map(exam => `<section><h2>Mock ${exam.id.toUpperCase()}</h2>
           <p class="muted">${Number.isInteger(state.mockBest[exam.id]) ? `Best score: ${state.mockBest[exam.id]} / 48` : 'Four sections · 12 questions each'}</p>
           <a class="button strong" href="#mock-${exam.id}">${validAttempt(exam) ? 'Resume' : 'Open'} Mock ${exam.id.toUpperCase()}</a></section>`).join('')}
@@ -399,6 +428,7 @@
   }
 
   function showExamResult(exam, result) {
+    stopAudio();
     let offset = 0;
     reader.innerHTML = `<div class="reader-top"><a href="#exams">All practice exams</a></div>
       <article class="sheet exam-layout"><p class="label">PRACTICE RESULTS</p>
@@ -410,6 +440,7 @@
           offset += questions.length;
           return `<section><h2>${section.title} · ${score(questions, selected)} / ${questions.length}</h2>
             <details><summary>Review the answers</summary><div class="details-body">${answerList(questions, selected)}</div></details>
+            ${section.groups.some(group => group.script) ? `<details><summary>Read the listening scripts</summary><div class="details-body japanese" lang="ja">${section.groups.filter(group => group.script).map(group => `<p>${copy(group.script, false)}</p>`).join('')}</div></details>` : ''}
           </section>`;
         }).join('')}
         <section class="actions"><button class="button" id="retry-mock" type="button">Try again</button>
@@ -424,6 +455,7 @@
   }
 
   function showMock(exam) {
+    stopAudio();
     clearInterval(ticking);
     if (latestResult?.id === exam.id) {
       showExamResult(exam, latestResult);
@@ -468,8 +500,7 @@
           ${section.groups.map(group => `
             ${group.text ? `<div class="mock-source">
               <p class="${group.script ? '' : 'japanese'}" ${group.script ? '' : 'lang="ja"'}>${copy(group.text, false)}</p>
-              ${group.script ? `<details><summary>Script for your reading partner</summary>
-                <div class="details-body japanese" lang="ja">${copy(group.script, false)}</div></details>` : ''}
+              ${group.script ? `<div class="exam-audio">${listenButton(group.script, 'Play the listening recording')}<span>Listen, then answer the questions below.</span></div>` : ''}
             </div>` : ''}
             ${group.questions.map(question => {
               const number = offset++;
@@ -522,6 +553,7 @@
   }
 
   function render() {
+    stopAudio();
     const hash = location.hash.slice(1);
     const match = /^chapter-(\d+)(?:\/([a-z]+))?$/.exec(hash);
     const lesson = match && lessonById(Number(match[1]));
@@ -571,6 +603,20 @@
   document.querySelector('.skip').addEventListener('click', event => {
     event.preventDefault();
     document.querySelector('#reader-heading')?.focus();
+  });
+  reader.addEventListener('click', event => {
+    const button = event.target.closest?.('[data-audio-id]');
+    if (!button) return;
+    const playingThisClip = activeAudio && activeAudioId === button.dataset.audioId;
+    stopAudio();
+    if (playingThisClip) return;
+    const audio = new Audio(`jft/audio/${button.dataset.audioId}.mp3`);
+    activeAudio = audio;
+    activeAudioId = button.dataset.audioId;
+    button.classList.add('is-playing');
+    button.textContent = '■ Stop';
+    audio.onended = audio.onerror = () => { if (activeAudio === audio) stopAudio(); };
+    audio.play().catch(() => { if (activeAudio === audio) stopAudio(); });
   });
   window.addEventListener('hashchange', render);
   render();
