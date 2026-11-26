@@ -49,16 +49,20 @@ def build_one(base, speaker, text, ffmpeg, output):
     if not wave.startswith(b'RIFF'):
         raise RuntimeError('Engine did not return WAV audio')
     temporary = output.with_suffix('.partial.mp3')
-    subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-i', 'pipe:0',
-                    '-codec:a', 'libmp3lame', '-b:a', '48k', str(temporary)],
-                   input=wave, check=True, stdout=subprocess.DEVNULL)
+    encoded = subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-i', 'pipe:0',
+                              '-codec:a', 'libmp3lame', '-b:a', '48k', '-f', 'mp3', 'pipe:1'],
+                             input=wave, check=True, stdout=subprocess.PIPE).stdout
+    temporary.write_bytes(encoded)
     if temporary.stat().st_size < 500:
         raise RuntimeError('Encoded clip is empty')
     temporary.replace(output)
 
 
-def write_manifest():
-    ids = sorted(file.stem for file in OUT.glob('*.mp3') if file.stat().st_size > 500)
+def write_manifest(list_path=HERE / 'audio-texts.json'):
+    requested = json.loads(list_path.read_text(encoding='utf-8'))
+    ids = sorted(clip['id'] for clip in requested
+                 if (OUT / (clip['id'] + '.mp3')).exists()
+                 and (OUT / (clip['id'] + '.mp3')).stat().st_size > 500)
     (HERE / 'audio-manifest.js').write_text('window.ikigaiJftAudio = ' + json.dumps(ids) + ';\n', encoding='utf-8')
     (OUT / 'manifest.json').write_text(json.dumps(ids, indent=2) + '\n', encoding='utf-8')
     return len(ids)
@@ -101,7 +105,7 @@ def main():
             except Exception as exc:
                 failed += 1
                 print(f'{index}/{len(clips)} failed: {clip["id"]} ({exc})', flush=True)
-        print(f'Done: {made} new, {failed} failed, {write_manifest()} available', flush=True)
+        print(f'Done: {made} new, {failed} failed, {write_manifest(args.list)} available', flush=True)
         return 1 if failed else 0
     finally:
         engine.terminate()

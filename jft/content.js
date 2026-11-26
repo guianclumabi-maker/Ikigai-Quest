@@ -1633,13 +1633,13 @@ window.ikigaiJft = {
         ],
         [
           "Staff",
-          "いいえ、これは駅（えき）行（い）きです。美術館（びじゅつかん）行（い）きは三番（さんばん）乗（の）り場（ば）です。",
-          "No, this one goes to the station. The museum bus is at bay 3."
+          "いいえ、これは駅（えき）行（い）きです。九時二十五分（くじにじゅうごふん）の美術館（びじゅつかん）行（い）きは二番（にばん）乗（の）り場（ば）です。",
+          "No, this one goes to the station. The 9:25 museum bus is at bay 2."
         ],
         [
           "Visitor",
-          "三番（さんばん）ですね。ありがとうございます。",
-          "Bay 3, right. Thank you."
+          "二番（にばん）ですね。ありがとうございます。",
+          "Bay 2, right. Thank you."
         ]
       ],
       "questions": [
@@ -1694,8 +1694,8 @@ window.ikigaiJft = {
             "Bay 1",
             "Bay 2"
           ],
-          "answer": 0,
-          "why": "The dialogue specifies 三番乗り場 for the museum bus.",
+          "answer": 2,
+          "why": "The dialogue specifies 二番乗り場 for the 9:25 museum bus.",
           "skill": "Listening"
         },
         {
@@ -1712,7 +1712,7 @@ window.ikigaiJft = {
       ],
       "task": [
         "Ask if a bus goes to the museum, then confirm the boarding point.",
-        "美術館へ行きますか。三番乗り場ですね。"
+        "美術館へ行きますか。二番乗り場ですね。"
       ]
     },
     {

@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const { lessons, exams } = window.ikigaiJft;
+  const reviews = window.ikigaiJftReviews || [];
   const reader = document.querySelector('#reader');
   const workbook = 'pdf/Ikigai_Quest_JFT_Basic_A2_Learner_Workbook.pdf';
   const title = 'Japanese for Life in Japan';
@@ -17,13 +18,16 @@
     { name: 'Your next steps', description: 'Progress, future goals, and information search', ids: [34, 35, 36] },
   ];
   const storageKey = 'ikigaiJftProgressV1';
-  let state = { done: [], best: {}, mockBest: {}, attempts: {}, last: null, furigana: true };
+  let state = { done: [], taskDone: [], best: {}, missed: {}, reviewBest: {}, mockBest: {}, attempts: {}, last: null, furigana: true };
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
     if (saved && typeof saved === 'object') {
-      const { done, best, mockBest, attempts, last, furigana } = saved;
+      const { done, taskDone, best, missed, reviewBest, mockBest, attempts, last, furigana } = saved;
       if (Array.isArray(done)) state.done = done.filter(id => lessons.some(lesson => lesson.id === id));
+      if (Array.isArray(taskDone)) state.taskDone = taskDone.filter(id => lessons.some(lesson => lesson.id === id));
       if (best && typeof best === 'object') state.best = best;
+      if (missed && typeof missed === 'object') state.missed = missed;
+      if (reviewBest && typeof reviewBest === 'object') state.reviewBest = reviewBest;
       if (mockBest && typeof mockBest === 'object') state.mockBest = mockBest;
       if (attempts && typeof attempts === 'object') state.attempts = attempts;
       if (last && lessons.some(lesson => lesson.id === last.id)) state.last = last;
@@ -39,7 +43,7 @@
   const escape = value => String(value).replace(/[&<>"']/g, ch => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[ch]));
-  const recognizedSections = ['words', 'examples', 'reading', 'listening', 'practice'];
+  const recognizedSections = ['words', 'examples', 'reading', 'listening', 'drills', 'practice'];
   const jpPattern = /[\u3040-\u30ff\u3400-\u9fff]/;
   const latinPattern = /[A-Za-z]/;
   const lessonById = id => lessons.find(lesson => lesson.id === id);
@@ -143,7 +147,7 @@
               return `<li><a href="${lessonLink(id)}" class="${rowClass}"><span class="chapter-number">${number(id)}</span>
                 <span><span class="chapter-title">${escape(chapter.title)}</span><span class="chapter-goal">${escape(chapter.goal)}</span></span>${mark}
               </a></li>`;
-            }).join('')}</ol></details>`;
+            }).join('')}</ol><a class="stage-review-link" href="#review-${index + 1}">Stage review · new reading and listening ${Number.isInteger(state.reviewBest[index + 1]) ? `· best ${state.reviewBest[index + 1]}` : ''} →</a></details>`;
         }).join('')}
         <p class="course-crosslink">Studying for the Japanese-Language Proficiency Test? <a href="JLPT_Reading_Quest.html">Open the JLPT N5/N4 course.</a></p>
       </section><aside class="home-rail" aria-label="After the chapters">
@@ -222,6 +226,7 @@
   function questionHTML(question, id, selected, required, order = choiceIndexes(question)) {
     return `<fieldset class="question"><legend>${id + 1}. ${sentence(question.prompt)}</legend>
       ${question.skill ? `<p class="label">${escape(question.skill)}</p>` : ''}
+      ${question.audio ? `<div class="question-audio">${listenButton(question.audio, 'Play the question audio')}</div>` : ''}
       ${order.map((index, position) =>
         `<label class="choice"><input type="radio" name="q${id}" value="${index}" ${index === selected ? 'checked' : ''} ${required && position === 0 ? 'required' : ''}>
           <span class="choice-letter" aria-hidden="true">${String.fromCharCode(65 + position)}</span>
@@ -259,7 +264,8 @@
     const done = state.done.includes(id);
     const hadScore = Number.isInteger(state.best[id]);
     const outline = [['words', lesson.chart ? 'Kana chart' : 'Vocabulary'], ['examples', 'Worked examples'],
-      ...(lesson.passage ? [['reading', 'Reading']] : []), ['listening', 'Listening script'], ['practice', 'Checkpoint']];
+      ...(lesson.passage ? [['reading', 'Reading']] : []), ['listening', 'Listening'],
+      ...(lesson.secondScript || lesson.kanaDrill ? [['drills', 'Try it yourself']] : []), ['practice', 'Mixed checkpoint']];
     reader.innerHTML = `
       <div class="reader-top"><a href="#chapters">All JFT-Basic chapters</a>
         <button class="button" id="furigana" type="button">Furigana</button></div>
@@ -284,13 +290,35 @@
             ${continueTo(lesson.passage ? 'reading' : 'listening', lesson.passage ? 'Read a real-life text' : 'Listen to the dialogue')}</section>
           ${lessonPassage(lesson)}
           <section id="listening" aria-labelledby="listening-label"><h2 id="listening-label">Listen to the dialogue</h2>
-            <p>Play each line and listen before opening the transcript. Then try the listening questions in the checkpoint.</p>
+            <p>Play each line and listen before opening the transcript. Try to catch the speaker’s goal and the important detail.</p>
+            <h3>Conversation 1 · learn the situation</h3>
             <div class="dialogue-audio">${lesson.script.map(([who, ja], i) => `<div><span>${escape(who)}</span>${listenButton(ja, `Play line ${i + 1} by ${who}`)}</div>`).join('')}</div>
             <details><summary>Open script and translation</summary><div class="details-body">${scriptContent(lesson.script)}</div></details>
-            ${continueTo('practice', 'Try the checkpoint')}
+            ${lesson.secondScript ? `<h3>Conversation 2 · a different exchange</h3>
+              <div class="dialogue-audio">${lesson.secondScript.map(([who, ja], i) => `<div><span>${escape(who)}</span>${listenButton(ja, `Play line ${i + 1} by ${who}`)}</div>`).join('')}</div>
+              <details><summary>Open the second script and translation</summary><div class="details-body">${scriptContent(lesson.secondScript)}</div></details>` : ''}
+            ${continueTo(lesson.secondScript || lesson.kanaDrill ? 'drills' : 'practice', lesson.secondScript || lesson.kanaDrill ? 'Try the activities' : 'Try the checkpoint')}
           </section>
+          ${lesson.kanaDrill ? `<section id="drills" aria-labelledby="drills-label"><h2 id="drills-label">Recall the sounds</h2>
+            <p>Say each character before opening its answer. Listen, repeat, then return to the chart for any sound you missed.</p>
+            <div class="recall-grid">${lesson.chart.flat().filter(Boolean).slice(0, 16).map(([kana, reading]) => `<details><summary class="japanese" lang="ja">${escape(kana)}</summary><p>${escape(reading)} ${listenButton(kana, `Hear ${kana}`)}</p></details>`).join('')}</div>
+            ${continueTo('practice', 'Take the mixed checkpoint')}
+          </section>` : ''}
+          ${lesson.secondScript ? `<section id="drills" aria-labelledby="drills-label"><h2 id="drills-label">Try it yourself</h2>
+            <p>Recall the words first. Then respond to the situation aloud or in writing before opening the model answer.</p>
+            <div class="recall-grid">${lesson.words.slice(0, 4).map(([ja, en]) => `<details><summary>${escape(en)}</summary><p class="japanese" lang="ja">${copy(ja)} ${listenButton(ja, `Hear ${ja}`)}</p></details>`).join('')}</div>
+            <section class="practice-task" aria-labelledby="practice-task-label"><h3 id="practice-task-label">Real-life task</h3>
+              <p>${escape(lesson.task[0])}</p>
+              <label class="response-label" for="task-response">Your response</label>
+              <textarea id="task-response" rows="3" placeholder="Try a short response in Japanese"></textarea>
+              <p class="muted">Check that your response fits the situation and includes the important detail. Speaking aloud is fine too.</p>
+              <details><summary>Show a possible response</summary><div class="details-body"><p class="japanese" lang="ja">${copy(lesson.task[1])}</p></div></details>
+              <button class="button task-done" id="mark-task" type="button" ${state.taskDone.includes(id) ? 'disabled' : ''}>${state.taskDone.includes(id) ? 'Task practiced' : 'I practiced this task'}</button>
+            </section>
+            ${continueTo('practice', 'Take the mixed checkpoint')}
+          </section>` : ''}
           <section id="practice" aria-labelledby="practice-label"><h2 id="practice-label">Chapter checkpoint</h2>
-            <p>Choose one answer per question. You can retry the checkpoint as often as you like, then continue to the next chapter.</p>
+            <p>${lesson.questions.length} mixed questions: vocabulary, expressions, reading, and listening. The answer choices change order when you retry.</p>
             <p id="chapter-best" class="muted">${hadScore ? `Best score: ${state.best[id]} / ${lesson.questions.length}` : ''}</p>
             <form id="checkpoint">
               <fieldset class="checkpoint-items" id="checkpoint-items" aria-label="Checkpoint questions">${checkpointQuestions(lesson)}</fieldset>
@@ -298,7 +326,7 @@
             </form>
             <div class="result" id="checkpoint-result" tabindex="-1" aria-live="polite"></div>
             <button class="button" id="retry-checkpoint" type="button" hidden>Try checkpoint again</button>
-            ${lesson.task ? `<section class="practice-task" aria-labelledby="practice-task-label">
+            ${lesson.task && !lesson.secondScript ? `<section class="practice-task" aria-labelledby="practice-task-label">
               <h3 id="practice-task-label">Try it yourself</h3>
               <p>${escape(lesson.task[0])}</p>
               <details><summary>Show example response</summary><div class="details-body"><p class="japanese">${copy(lesson.task[1])}</p></div></details>
@@ -335,6 +363,7 @@
       const values = new FormData(form);
       const selected = lesson.questions.map((_, i) => values.has(`q${i}`) ? Number(values.get(`q${i}`)) : null);
       const points = score(lesson.questions, selected);
+      state.missed[id] = selected.flatMap((choice, index) => choice === lesson.questions[index].answer ? [] : [index]);
       state.best[id] = Math.max(Number(state.best[id]) || 0, points);
       state.last = { id, section: 'practice' };
       markRead();
@@ -354,6 +383,13 @@
       retry.hidden = true;
       items.querySelector('input').focus();
     });
+    const taskButton = document.querySelector('#mark-task');
+    if (taskButton) taskButton.addEventListener('click', () => {
+      if (!state.taskDone.includes(id)) state.taskDone.push(id);
+      taskButton.textContent = 'Task practiced';
+      taskButton.disabled = true;
+      save();
+    });
     const kana = document.querySelector('#kana-toggle');
     if (kana) kana.addEventListener('click', () => {
       const hidden = document.querySelector('#kana-grid').classList.toggle('conceal');
@@ -367,6 +403,7 @@
   function showStats() {
     const done = new Set(state.done).size;
     const attempted = lessons.filter(l => Number.isInteger(state.best[l.id]));
+    const missedChapters = lessons.filter(l => Array.isArray(state.missed[l.id]) && state.missed[l.id].length);
     const scoreText = exam => Number.isInteger(state.mockBest[exam.id]) ? `${state.mockBest[exam.id]} / 48` : 'Unattempted';
     reader.innerHTML = `
       <div class="reader-top"><a href="#chapters">All JFT-Basic chapters</a></div>
@@ -377,6 +414,8 @@
         <div class="stats-grid">
           <div class="stat-tile"><strong>${done} / ${lessons.length}</strong><span>Chapters read</span></div>
           <div class="stat-tile"><strong>${attempted.length} / ${lessons.length}</strong><span>Checkpoints taken</span></div>
+          <div class="stat-tile"><strong>${state.taskDone.length} / ${lessons.filter(l => l.task).length}</strong><span>Real-life tasks practiced</span></div>
+          <div class="stat-tile"><strong>${Object.keys(state.reviewBest).length} / ${reviews.length}</strong><span>Stage reviews taken</span></div>
           ${exams.map(exam => `<div class="stat-tile"><strong>${scoreText(exam)}</strong><span>Mock ${exam.id.toUpperCase()} best score</span></div>`).join('')}
         </div>
         <section><h2>Checkpoint results</h2>
@@ -387,7 +426,57 @@
             : '<p>Take a chapter checkpoint to see your result here.</p>'}
           <a class="button" href="#exams">Go to exam prep</a>
         </section>
+        ${missedChapters.length ? `<section><h2>Review missed questions</h2><p>Return to these checkpoints and retry the items you missed.</p>
+          <ul>${missedChapters.map(l => `<li><a href="${lessonLink(l.id, 'practice')}">${escape(l.title)}</a> · ${state.missed[l.id].length} to revisit</li>`).join('')}</ul></section>` : ''}
       </article>`;
+  }
+
+  function reviewQuestions(review) {
+    const sourceQuestions = review.questions.map(([prompt, choices, answer, why, skill]) => ({
+      prompt, choices, answer, why, skill: skill || 'New reading', audio: skill === 'Listening' ? review.spoken : undefined,
+    }));
+    const stage = stages[review.id - 1];
+    const recap = stage.ids.flatMap(id => {
+      const lesson = lessonById(id);
+      const vocabulary = lesson.questions.find(q => q.skill === 'Vocabulary' || q.skill === 'Kana recall');
+      const expression = lesson.questions.find(q => q.skill === 'Expression');
+      return [vocabulary, expression].filter(Boolean);
+    }).slice(0, 8);
+    return [...sourceQuestions, ...recap];
+  }
+
+  function showReview(review) {
+    const questions = reviewQuestions(review);
+    reader.innerHTML = `<div class="reader-top"><a href="#chapters">All JFT-Basic chapters</a></div>
+      <article class="sheet exam-layout"><p class="label">STAGE ${number(review.id)} REVIEW</p>
+        <h1 id="reader-heading" tabindex="-1">${escape(review.title)}</h1>
+        <p>Read a new everyday text, listen to a new message, then review words and expressions from this stage.</p>
+        <div class="passage"><h2>${escape(review.sourceTitle)}</h2><p class="japanese" lang="ja">${copy(review.source)}</p></div>
+        <p class="muted">${questions.length} questions · Best score: ${Number.isInteger(state.reviewBest[review.id]) ? `${state.reviewBest[review.id]} / ${questions.length}` : 'Not taken yet'}</p>
+        <form id="review-form"><fieldset class="checkpoint-items" aria-label="Stage review questions">
+          ${questions.map((q, i) => questionHTML(q, i, null, true, shuffledChoices(q))).join('')}</fieldset>
+          <button class="button strong" type="submit">Check my answers</button></form>
+        <div class="result" id="review-result" tabindex="-1" aria-live="polite"></div>
+        <a class="button" href="#review-${review.id}" id="retry-review" hidden>Try review again</a>
+      </article>`;
+    document.querySelector('#review-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const values = new FormData(form);
+      const selected = questions.map((_, i) => values.has(`q${i}`) ? Number(values.get(`q${i}`)) : null);
+      const points = score(questions, selected);
+      state.reviewBest[review.id] = Math.max(Number(state.reviewBest[review.id]) || 0, points);
+      save();
+      document.querySelector('#review-result').innerHTML = `<h2>${points} of ${questions.length} correct</h2>
+        <p><strong>New text in English:</strong> ${escape(review.translation)}</p>
+        <p><strong>Spoken message:</strong> ${copy(review.spoken)}</p>${answerList(questions, selected)}`;
+      form.querySelector('fieldset').disabled = true;
+      form.querySelector('button[type=submit]').disabled = true;
+      const retry = document.querySelector('#retry-review');
+      retry.hidden = false;
+      retry.addEventListener('click', event => { event.preventDefault(); showReview(review); setHeading(document.querySelector('#reader-heading'), true); });
+      document.querySelector('#review-result').focus();
+    });
   }
 
   function showExamMenu() {
@@ -574,7 +663,11 @@
     } else {
       currentChapter = null;
       const exam = exams.find(e => hash === `mock-${e.id}`);
-      if (exam) {
+      const review = reviews.find(item => hash === `review-${item.id}`);
+      if (review) {
+        showReview(review);
+        updateSidebar('learn');
+      } else if (exam) {
         showMock(exam);
         updateSidebar('exams');
       } else if (hash === 'exams') {

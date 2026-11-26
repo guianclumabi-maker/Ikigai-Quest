@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 global.window = {};
-for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final']) require(`./${file}.js`);
+for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice']) require(`./${file}.js`);
 
 function audioId(value) {
   let hash = 2166136261;
@@ -31,6 +31,7 @@ for (const lesson of window.ikigaiJft.lessons) {
   if (lesson.words) for (const [ja] of lesson.words) add(ja);
   for (const example of lesson.examples) add(example[0]);
   for (const [, ja] of lesson.script) add(ja);
+  if (lesson.secondScript) for (const [, ja] of lesson.secondScript) add(ja);
   for (const block of (lesson.passage || []).slice(1)) {
     for (const line of block.split(/<br\s*\/?\s*>/i)) add(line);
   }
@@ -40,6 +41,8 @@ for (const exam of window.ikigaiJft.exams) {
     for (const group of section.groups) add(group.script);
   }
 }
+require('./stage-reviews.js');
+for (const review of window.ikigaiJftReviews) add(review.spoken);
 const output = path.join(__dirname, 'audio-texts.json');
 fs.writeFileSync(output, JSON.stringify([...clips.values()], null, 2) + '\n', 'utf8');
 console.log(`${clips.size} unique JFT clips written to ${output}`);

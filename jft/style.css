@@ -149,6 +149,8 @@ summary { cursor: pointer; padding: .85rem 1rem; font-weight: 750; color: var(--
   text-decoration: none;
 }
 .chapter-list a:hover .chapter-title { text-decoration: underline; }
+.stage-review-link { display: block; margin: .2rem 1rem .9rem; padding: .8rem 1rem; border: 1px solid #c8ded4; border-radius: .65rem; background: #eaf5ef; color: var(--green); font-weight: 750; text-decoration: none; }
+.stage-review-link:hover { background: #dceddf; text-decoration: underline; }
 .chapter-number { display: grid; place-items: center; width: 35px; height: 35px; border: 1px solid #d9d2c6; border-radius: 50%; background: #fffaf0; color: var(--muted); font: 500 .875rem "DM Mono", monospace; }
 .chapter-list a.is-current .chapter-number { background: var(--teal); border-color: var(--teal); color: white; }
 .chapter-list a.is-done .chapter-number { background: #e6f3ed; border-color: #b8ddd4; color: var(--deep); }
@@ -195,6 +197,15 @@ summary { cursor: pointer; padding: .85rem 1rem; font-weight: 750; color: var(--
 .dialogue-audio { display: grid; gap: .55rem; margin: 1rem 0; }
 .dialogue-audio > div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem .8rem; background: var(--soft); border-radius: .6rem; }
 .dialogue-audio span { font-weight: 700; }
+.recall-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin: 1rem 0; }
+.recall-grid details { background: var(--soft); border-color: #d4e5da; }
+.recall-grid summary { font-size: .95rem; }
+.recall-grid p { padding: 0 1rem .75rem; margin: 0; }
+.response-label { display: block; margin: .9rem 0 .3rem; font-weight: 750; }
+.practice-task textarea { display: block; width: 100%; max-width: 100%; padding: .7rem; border: 1px solid var(--line); border-radius: .6rem; background: #fff; color: var(--ink); font: inherit; resize: vertical; }
+.practice-task textarea:focus-visible { outline: 3px solid #a4cbbb; }
+.question-audio { margin: .25rem 0 .65rem; }
+.question-audio .listen-button { margin-inline-start: 0; padding: .45rem .75rem; }
 .exam-audio { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-top: .65rem; }
 .exam-audio span { color: var(--muted); font-size: .85rem; }
 .listen-button { display: inline-flex; align-items: center; gap: .3rem; margin-inline-start: .5rem; padding: .3rem .55rem; border: 1px solid #9fcabc; border-radius: 999px; background: #fff; color: var(--green); font: 700 .76rem/1.2 system-ui, sans-serif; cursor: pointer; white-space: nowrap; vertical-align: middle; }
@@ -226,6 +237,7 @@ summary { cursor: pointer; padding: .85rem 1rem; font-weight: 750; color: var(--
 .practice-task { margin-top: clamp(1.5rem, 4vw, 2.1rem); padding: clamp(.9rem, 3vw, 1.2rem); border: 1px solid #c9dacb; border-radius: .8rem; background: var(--soft); }
 .practice-task p { margin-bottom: .75rem; }
 .practice-task details { border-color: #c9dacb; }
+.task-done { margin-top: .85rem; }
 .exam-layout { width: min(100%, 48rem); margin-inline: auto; }
 .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
 .stat-tile { padding: .95rem 1rem; background: var(--soft); border: 1px solid #d4e5da; border-radius: .8rem; }
@@ -266,4 +278,5 @@ thead th { background: var(--soft); }
   .path-switch a { padding-inline: .5rem; }
   .vocabulary { grid-template-columns: 1fr; }
   .stat-tile { padding-inline: .75rem; }
+  .recall-grid { grid-template-columns: 1fr; }
 }
