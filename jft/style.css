@@ -259,6 +259,7 @@ table { width: 100%; border-collapse: collapse; margin: .75rem 0; }
 th, td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid var(--line); }
 thead th { background: var(--soft); }
 .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; padding: 1rem 0 1.5rem; margin-top: 2.1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+.load-error { max-width: 42rem; margin: 3rem auto; padding: 2rem; border: 1px solid #e1c9a4; border-radius: .9rem; background: #fffaf0; }
 @media (max-width: 1120px) {
   .reader-grid { grid-template-columns: minmax(0, 1fr); }
   .outline { position: static; grid-column: 1; grid-row: auto; }

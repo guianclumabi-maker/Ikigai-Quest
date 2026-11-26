@@ -31,6 +31,22 @@ const context = vm.createContext({
 for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice', 'stage-reviews', 'audio-manifest', 'reader']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, `${file}.js`), 'utf8'), context, { filename: file });
 }
+function checkQuestion(question, where) {
+  assert.ok(question.prompt?.trim(), `${where} has no prompt`);
+  assert.ok(question.why?.trim(), `${where} has no explanation`);
+  assert.ok(Array.isArray(question.choices) && question.choices.length >= 3, `${where} has too few choices`);
+  assert.ok(Number.isInteger(question.answer) && question.answer >= 0 && question.answer < question.choices.length, `${where} has an invalid answer`);
+  assert.equal(new Set(question.choices.map(choice => String(choice).trim())).size, question.choices.length, `${where} has duplicate choices`);
+}
+for (const lesson of context.window.ikigaiJft.lessons) {
+  assert.equal(lesson.questions.length, 15, `Chapter ${lesson.id} does not have 15 questions`);
+  lesson.questions.forEach((question, index) => checkQuestion(question, `Chapter ${lesson.id} question ${index + 1}`));
+}
+for (const exam of context.window.ikigaiJft.exams) {
+  const questions = exam.sections.flatMap(section => section.groups.flatMap(group => group.questions));
+  assert.equal(questions.length, 48, `Mock ${exam.id} does not have 48 questions`);
+  questions.forEach((question, index) => checkQuestion(question, `Mock ${exam.id} question ${index + 1}`));
+}
 assert.ok(reader.innerHTML.includes('Your study path'), 'Home route failed');
 for (let id = 1; id <= 36; id++) {
   location.hash = `#chapter-${id}`;
@@ -65,3 +81,23 @@ for (const route of ['#stats', '#exams']) {
   assert.ok(reader.innerHTML.includes('reader-heading'), `${route} did not render`);
 }
 console.log('Rendered all 36 chapters and 7 reviews; checked reading and audio sources in both mocks.');
+
+// A failed content load must show a recovery action instead of an empty lesson page.
+const failedReader = { innerHTML: '' };
+let onLoad;
+const failedContext = vm.createContext({
+  window: { addEventListener(name, callback) { if (name === 'load') onLoad = callback; } },
+  document: { querySelector: selector => selector === '#reader' ? failedReader : null },
+});
+vm.runInContext(fs.readFileSync(path.join(__dirname, 'boot-check.js'), 'utf8'), failedContext);
+onLoad();
+assert.ok(failedReader.innerHTML.includes('The lessons did not load'), 'Missing lesson data has no visible recovery message');
+assert.ok(failedReader.innerHTML.includes('Reload the course'), 'Missing lesson data has no reload action');
+failedReader.innerHTML = 'Course loaded';
+failedContext.window.ikigaiJftReady = true;
+onLoad();
+assert.equal(failedReader.innerHTML, 'Course loaded', 'Load check replaced a working course');
+const entry = fs.readFileSync(path.join(__dirname, '..', 'jft-basic.html'), 'utf8');
+const versionedAssets = [...entry.matchAll(/(?:src|href)="(jft\/(?:[\w-]+\.(?:js|css))\?v=([^"]+))"/g)];
+assert.equal(versionedAssets.length, 11, 'A JFT asset is not versioned');
+assert.equal(new Set(versionedAssets.map(match => match[2])).size, 1, 'JFT assets have mixed versions');

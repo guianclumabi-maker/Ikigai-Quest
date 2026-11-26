@@ -1,8 +1,9 @@
 (() => {
   'use strict';
+  const reader = document.querySelector('#reader');
+  if (!reader || !window.ikigaiJft?.lessons?.length) return;
   const { lessons, exams } = window.ikigaiJft;
   const reviews = window.ikigaiJftReviews || [];
-  const reader = document.querySelector('#reader');
   const workbook = 'pdf/Ikigai_Quest_JFT_Basic_A2_Learner_Workbook.pdf';
   const title = 'Japanese for Life in Japan';
   const audioFiles = new Set(window.ikigaiJftAudio || []);
@@ -803,4 +804,5 @@
   });
   window.addEventListener('hashchange', render);
   render();
+  window.ikigaiJftReady = true;
 })();
