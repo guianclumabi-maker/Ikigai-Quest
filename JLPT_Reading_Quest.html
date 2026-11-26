@@ -394,7 +394,7 @@ function runPlacementCheck(){let n=0;const answers=[];function ask(){if(n===plac
 function openStats(){state.cardsKnown ||= {};const known=Object.values(state.cardsKnown).reduce((n,a)=>n+a.length,0);feature('Your learning stats','A snapshot of your progress so far. Your progress stays saved in this browser.');document.querySelector('#play').innerHTML+=`<div class="stat-grid"><div class="stat-box"><b>${state.xp}</b><span>TOTAL XP</span></div><div class="stat-box"><b>${state.done.length}/${lessons.length}</b><span>QUESTS CLEARED</span></div><div class="stat-box"><b>${state.streak}</b><span>DAY STREAK</span></div><div class="stat-box"><b>${known}</b><span>CARDS KNOWN</span></div></div><div class="feature-card"><h3>Quest progress</h3><p>${chapterSummary()}</p><div class="qbar"><i style="width:${Math.round(state.done.length/lessons.length*100)}%"></i></div></div>`}
 function openSupport(){feature('Help Ikigai Quest grow','A little support goes a long way. This independent study project is built to help beginners take steady steps into Japanese.');document.querySelector('#play').innerHTML+=`<div class="support-hero">💛</div><div class="feature-card"><h3>Every bit is appreciated.</h3><p>Support is optional. The learning path is here for you to use, and sharing it with another learner helps too.</p><button id="shareCourse">Share the study path</button></div><p style="font-size:10px;text-align:center;color:var(--muted);margin-top:12px">Thanks for being part of the learning community.</p>`;document.querySelector('#shareCourse').onclick=async()=>{try{await navigator.clipboard.writeText("https://ikigai-quest.learn-japanese.workers.dev/");document.querySelector('#shareCourse').textContent='Link copied ✓'}catch{document.querySelector('#shareCourse').textContent='Copy the page link from your browser'}}}
 function openFeedback(){feature('Share feedback','What would make this study path more useful for you? Your note will be saved in this browser.');document.querySelector('#play').innerHTML+=`<form class="feedback-form"><textarea id="feedbackNote" placeholder="Write a suggestion or report an issue…"></textarea><button class="next" type="submit">Save feedback note</button><p id="feedbackSaved" class="lesson-goal"></p></form>`;document.querySelector('.feedback-form').onsubmit=e=>{e.preventDefault();let v=document.querySelector('#feedbackNote').value.trim();if(v){localStorage.setItem('ikigaiFeedbackNote',v);document.querySelector('#feedbackSaved').textContent='Saved on this device. Thank you for the note!'}}}
-document.querySelectorAll('.nav-button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav-button').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.view==='Learn'){closeModal();return}if(b.dataset.view==='Kana'){closeModal();filter='Scripts';render();return}if(b.dataset.view==='Exam prep'){closeModal();document.getElementById('practiceCard')?.scrollIntoView({behavior:'smooth'});return}if(b.dataset.view==='Cards')openDecks();if(b.dataset.view==='Stats')openStats();if(b.dataset.view==='Support')openSupport();if(b.dataset.view==='Feedback'){closeModal();if(typeof window.openIkigaiFeedback==='function'){window.openIkigaiFeedback()}else{openFeedback()}}});
+document.querySelectorAll('.nav-button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav-button').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.view==='Learn'){closeModal();return}if(b.dataset.view==='Kana'){closeModal();filter='Scripts';render();document.querySelector('#cards')?.scrollIntoView({behavior:'smooth',block:'start'});return}if(b.dataset.view==='Exam prep'){closeModal();document.getElementById('practiceCard')?.scrollIntoView({behavior:'smooth'});return}if(b.dataset.view==='Cards')openDecks();if(b.dataset.view==='Stats')openStats();if(b.dataset.view==='Support')openSupport();if(b.dataset.view==='Feedback'){closeModal();if(typeof window.openIkigaiFeedback==='function'){window.openIkigaiFeedback()}else{openFeedback()}}});
 document.querySelector('#activityText').textContent=state.activity||'No activity yet';
 const oldFinish=finish;finish=function(points,total,study=false){if(current===NI_LESSON&&!study)recordPilotScore('niPractice',points,total);oldFinish(points,total,study);state.activity=`Completed ${lessons[current][1]} · ${points}/${total} correct`;persist()};
 </script><style>.top .brand{display:none}.modal{width:min(940px,calc(100% - 32px));max-height:92vh;overflow-y:auto}.overlay.open{overflow:auto;align-items:start;padding:4vh 16px}</style>
@@ -838,20 +838,62 @@ function ymd(d){return d.toLocaleDateString('en-CA')}
 function todayStr(){return ymd(new Date())}
 function plusDays(n){var d=new Date();d.setDate(d.getDate()+n);return ymd(d)}
 
-/* Vowel lessons and per-character review */
-const KANA_UNITS = [
-  {id:'hiragana',name:'Hiragana',deck:3,description:'Hiragana is used for particles such as は, endings such as ます, and some words. Start with the five vowel sounds.',
-   words:[['あい','ai','love'],['いえ','ie','house / home'],['うえ','ue','top / above'],['え','e','picture'],['おい','oi','nephew']]},
-  {id:'katakana',name:'Katakana',deck:4,description:'Katakana uses different shapes for the same sounds. It often appears in words borrowed from other languages, foreign names, and sound effects.',
-   words:[['アイス','aisu','ice cream'],['イヤホン','iyahon','earphones'],['ウイルス','uirusu','virus'],['エアコン','eakon','air conditioner'],['オレンジ','orenji','orange']]}
+/* Ten guided rows for each script, followed by spaced per-character review. */
+const KANA_ROW_NAMES=['The five vowels','K row','S row','T row','N row','H row','M row','Y row','R row','W and N'];
+const KANA_ROW_NOTES=[
+  'Begin with the five vowel sounds. Each basic character takes one steady beat.',
+  'Add a k sound before each vowel: ka, ki, ku, ke, ko.',
+  'Follow the vowel order. Notice that し is read shi.',
+  'Follow the vowel order. Notice the special readings ち (chi) and つ (tsu).',
+  'Keep the same vowel order as you read na, ni, nu, ne, no.',
+  'Notice the special reading ふ (fu). Practise the shapes slowly.',
+  'Read ma, mi, mu, me, mo, one sound at a time.',
+  'This row has three sounds: ya, yu, yo. There are no basic yi or ye characters.',
+  'Read ra, ri, ru, re, ro. Listen closely to the Japanese r sound.',
+  'Finish with wa, the object marker を (usually pronounced o), and ん, which takes its own beat.'
 ];
-const KANA_VOWELS = KANA_UNITS.flatMap(unit=>decks[unit.deck].cards.slice(0,5).map(([glyph])=>glyph));
+const KANA_SCRIPTS=[
+  {id:'hiragana',name:'Hiragana',deck:3,description:'Hiragana is used in native words, particles, and grammar endings. Learn each row before the full deck.',rows:[
+    [['あい','ai','love'],['いえ','ie','house / home'],['うえ','ue','top / above'],['え','e','picture'],['おい','oi','nephew']],
+    [['かさ','kasa','umbrella'],['きく','kiku','listen'],['くつ','kutsu','shoes'],['けさ','kesa','this morning'],['こえ','koe','voice']],
+    [['さかな','sakana','fish'],['しお','shio','salt'],['すし','sushi','sushi'],['せかい','sekai','world'],['そら','sora','sky']],
+    [['たまご','tamago','egg'],['ちず','chizu','map'],['つくえ','tsukue','desk'],['てがみ','tegami','letter'],['とけい','tokei','clock']],
+    [['なまえ','namae','name'],['にく','niku','meat'],['ぬの','nuno','cloth'],['ねこ','neko','cat'],['のり','nori','seaweed']],
+    [['はな','hana','flower'],['ひと','hito','person'],['ふね','fune','boat'],['へや','heya','room'],['ほし','hoshi','star']],
+    [['まち','machi','town'],['みず','mizu','water'],['むし','mushi','insect'],['め','me','eye'],['もり','mori','forest']],
+    [['やま','yama','mountain'],['ゆき','yuki','snow'],['よる','yoru','night']],
+    [['らくだ','rakuda','camel'],['りんご','ringo','apple'],['るす','rusu','absence'],['れいぞうこ','reizouko','refrigerator'],['ろく','roku','six']],
+    [['わたし','watashi','I / me'],['みずを','mizu o','water + object marker'],['ほん','hon','book']]
+  ]},
+  {id:'katakana',name:'Katakana',deck:4,description:'Katakana has different shapes for the same sounds. It is common in loanwords, names, and sound effects.',rows:[
+    [['アイス','aisu','ice cream'],['イヤホン','iyahon','earphones'],['ウイルス','uirusu','virus'],['エアコン','eakon','air conditioner'],['オレンジ','orenji','orange']],
+    [['カメラ','kamera','camera'],['キー','kii','key'],['クラス','kurasu','class'],['ケーキ','keeki','cake'],['コーヒー','koohii','coffee']],
+    [['サラダ','sarada','salad'],['シール','shiiru','sticker'],['スープ','suupu','soup'],['セーター','seetaa','sweater'],['ソファ','sofa','sofa']],
+    [['タクシー','takushii','taxi'],['チーズ','chiizu','cheese'],['ツアー','tsuaa','tour'],['テーブル','teeburu','table'],['トマト','tomato','tomato']],
+    [['ナイフ','naifu','knife'],['ニュース','nyuusu','news'],['ヌードル','nuudoru','noodles'],['ネクタイ','nekutai','necktie'],['ノート','nooto','notebook']],
+    [['ハンバーガー','hanbaagaa','hamburger'],['ヒーター','hiitaa','heater'],['フルーツ','furuutsu','fruit'],['ヘルメット','herumetto','helmet'],['ホテル','hoteru','hotel']],
+    [['マスク','masuku','mask'],['ミルク','miruku','milk'],['ムード','muudo','mood'],['メニュー','menyuu','menu'],['モデル','moderu','model']],
+    [['ヤード','yaado','yard'],['ユニフォーム','yunifoomu','uniform'],['ヨーグルト','yooguruto','yogurt']],
+    [['ラジオ','rajio','radio'],['リモコン','rimokon','remote control'],['ルール','ruuru','rule'],['レストラン','resutoran','restaurant'],['ロビー','robii','lobby']],
+    [['ワイン','wain','wine'],['ヲ','wo (spoken o)','rare katakana spelling of the object marker'],['パン','pan','bread']]
+  ]}
+];
+const KANA_UNITS=KANA_SCRIPTS.flatMap(script=>{
+  let offset=0;
+  return script.rows.map((words,row)=>{
+    const unit={id:row===0?script.id:`${script.id}-${row}`,name:script.name,deck:script.deck,row,title:KANA_ROW_NAMES[row],description:script.description,note:script.deck===4&&row===9?'Finish with ワ and ン. ヲ is rare in modern katakana; it is conventionally romanized wo but usually pronounced o.':KANA_ROW_NOTES[row],offset,words};
+    offset+=words.length;
+    pilotScoreSizes[unit.id]=words.length*3;
+    return unit;
+  });
+});
+const KANA_GLYPHS=KANA_UNITS.flatMap(unit=>decks[unit.deck].cards.slice(unit.offset,unit.offset+unit.words.length).map(([glyph])=>glyph));
 const KANA_INTERVALS = [1,3,7,14,30];
 
 function kanaEntries(unit){
-  return decks[unit.deck].cards.slice(0,5).map(([glyph,reading],i)=>({unit,glyph,reading,word:unit.words[i]}));
+  return decks[unit.deck].cards.slice(unit.offset,unit.offset+unit.words.length).map(([glyph,reading],i)=>({unit,glyph,reading,word:unit.words[i]}));
 }
-function dueVowels(){
+function dueKana(){
   const today=todayStr();
   return KANA_UNITS.flatMap(kanaEntries).filter(({glyph})=>state.kanaReview?.[glyph]?.due<=today);
 }
@@ -861,33 +903,38 @@ function kanaPrompt(entry,type,again=false){
   const fromReading=type==='character';
   const correct=fromReading?glyph:reading;
   const choices=entries.filter(item=>item.glyph!==glyph).map(item=>fromReading?item.glyph:item.reading);
+  for(const [otherGlyph,otherReading] of shuffle(decks[unit.deck].cards)){
+    const candidate=fromReading?otherGlyph:otherReading;
+    if(choices.length>=3)break;
+    if(candidate!==correct&&!choices.includes(candidate))choices.push(candidate);
+  }
   const options=shuffle([correct,...shuffle(choices).slice(0,3)]);
   const prompt=fromReading
-    ? `Which ${unit.id} character is read “${reading}”?`
+    ? `Which ${unit.name.toLowerCase()} character is romanized “${reading}”?`
     : type==='word'
-      ? `What sound does the highlighted character make?<br><span class="kana-quiz-word" lang="ja"><mark>${glyph}</mark>${word[0].slice(1)}</span><br><small>${word[2]}</small>`
-      : `What sound does this character make?<br><span class="kana-big" lang="ja">${glyph}</span>`;
-  return {glyph,prompt,options,answer:options.indexOf(correct),why:`${glyph} is read ${reading}.${type==='word'?` ${word[0]} (${word[1]}) means “${word[2]}.”`:''}`,again};
+      ? `Which romaji label matches the highlighted character?<br><span class="kana-quiz-word" lang="ja">${word[0].replace(glyph,`<mark>${glyph}</mark>`)}</span><br><small>${word[2]}</small>`
+      : `What is the romaji reading of this character?<br><span class="kana-big" lang="ja">${glyph}</span>`;
+  return {glyph,prompt,options,answer:options.indexOf(correct),why:`${glyph} is romanized ${reading}${glyph==='を'||glyph==='ヲ'?' but is usually pronounced o': ''}.${type==='word'?` ${word[0]} (${word[1]}) means “${word[2]}.”`:''}`,again};
 }
 function openKanaUnit(unit){
-  openOverlay(unit.name+' · VOWELS');
+  openOverlay(unit.name+' · '+unit.title.toUpperCase());
   const play=document.querySelector('#play');
-  play.innerHTML=`<h2 id="modalTitle">${unit.name} · The five vowels</h2><p class="lesson-goal">${unit.description}</p>
+  play.innerHTML=`<h2 id="modalTitle">${unit.name} · ${unit.title}</h2><p class="lesson-goal">${unit.description}</p>
   <article class="lesson-reader kana-reader">
-    <h3>Meet the sounds</h3><p>Listen and repeat each sound as you look at its shape. The letters below each character show its reading in romaji, the Latin alphabet used to write Japanese sounds.</p>
+    <h3>Meet the sounds</h3><p>${unit.note} Listen and repeat each sound as you look at its shape. The letters below each character show its reading in romaji.</p>
     <div class="kana-vowels">${kanaEntries(unit).map(({glyph,reading})=>`<div><span lang="ja">${glyph}</span><b>${reading}</b>${sayButtonHtml(glyph,true)}</div>`).join('')}</div>
-    <section class="pilot-section"><h3>${unit.id==='hiragana'?'Read your first words':'Spot the vowels in real words'}</h3>
-    <p>${unit.id==='hiragana'?'Say the sounds one at a time. For いえ, say i and then e, with one beat per vowel.':'Read the first character in each word. Use the romaji to read the whole word.'}</p>
-    <dl class="kana-study-words">${unit.words.map(([word,reading,meaning])=>`<div><dt lang="ja"><mark>${word[0]}</mark>${word.slice(1)}</dt><dd><b>${reading}</b> · ${meaning}</dd></div>`).join('')}</dl>
-    </section><button type="button" class="next" id="kanaStartPractice">Practise the five vowels</button>
+    <section class="pilot-section"><h3>Read with these characters</h3>
+    <p>Find the highlighted character, say its sound, then use the romaji to read the whole example. Some examples contain sounds from later rows; you only need to recognize the highlighted one for now.</p>
+    <dl class="kana-study-words">${kanaEntries(unit).map(({glyph,word:[word,reading,meaning]})=>`<div><dt lang="ja">${word.replace(glyph,`<mark>${glyph}</mark>`)}</dt><dd><b>${reading}</b> · ${meaning}</dd></div>`).join('')}</dl>
+    </section><button type="button" class="next" id="kanaStartPractice">Practise these ${unit.words.length} sounds</button>
   </article>`;
-  play.querySelector('#kanaStartPractice').onclick=()=>startVowelPractice(unit);
+  play.querySelector('#kanaStartPractice').onclick=()=>startKanaUnitPractice(unit);
   play.closest('.modal').scrollTop=0;
 }
-function startVowelPractice(unit){
-  const entries=unit?kanaEntries(unit):dueVowels();
+function startKanaUnitPractice(unit){
+  const entries=unit?kanaEntries(unit):dueKana();
   if(!entries.length)return;
-  const title=unit?unit.name+' vowel practice':'Kana review';
+  const title=unit?`${unit.name} · ${unit.title} practice`:'Kana review';
   const items=unit?['sound','character','word'].flatMap(type=>shuffle(entries).map(entry=>kanaPrompt(entry,type)))
     :shuffle(entries).map((entry,i)=>kanaPrompt(entry,i%2?'character':'sound'));
   const firstRoundSize=items.length;
@@ -927,24 +974,27 @@ window.renderKanaPath=function(){
   const done=state.kanaDone||[];
   const next=KANA_UNITS.find(unit=>scores[unit.id]===undefined&&!done[unit.deck-3])||KANA_UNITS[0];
   const welcome=document.querySelector('#continueCard');
-  welcome.innerHTML=`<div><h3>Learn to read kana</h3><p>Meet the five sounds, read them in words, then practise recalling them.</p></div><button type="button" class="continue-button" id="studyVowels">Study ${next.name.toLowerCase()} vowels</button>`;
-  welcome.querySelector('#studyVowels').onclick=()=>openKanaUnit(next);
+  welcome.innerHTML=`<div><span class="continue-label">KANA STUDIO · 92 BASIC CHARACTERS</span><h3>Learn to read kana, one row at a time</h3><p>Meet each character, hear its sound, read examples, then practise. Hiragana and katakana each have ten short groups.</p></div><button type="button" class="continue-button" id="studyKana">Study ${next.name.toLowerCase()} · ${next.title}</button>`;
+  welcome.querySelector('#studyKana').onclick=()=>openKanaUnit(next);
   const list=document.querySelector('#cards');
-  const due=dueVowels();
+  const due=dueKana();
   const date=Object.values(state.kanaReview||{}).map(card=>card.due).sort()[0];
-  const review=due.length?`<button type="button" class="practice-choice" id="dueVowels">Review due kana · ${due.length} ${due.length===1?'character':'characters'}</button>`
+  const review=due.length?`<button type="button" class="practice-choice" id="dueKana">Review due kana · ${due.length} ${due.length===1?'character':'characters'}</button>`
     :date?`<p>Next kana review: ${kanaReviewDate(date)}.</p>`:'';
-  list.innerHTML=`<div class="kana-path">${KANA_UNITS.map(unit=>{
-    const score=scores[unit.id];
-    const canBrowse=score!==undefined||done[unit.deck-3];
-    const fullDeckLocked=unit.deck===4&&!done[0]&&!done[1];
-    const deckLabel=fullDeckLocked?'The full katakana deck opens after the full hiragana deck.':!canBrowse?'Complete vowel practice to open the full deck.':'';
-    const glyphs=kanaEntries(unit).map(entry=>entry.glyph).join(' ');
-    return `<article class="kana-path-card"><button type="button" class="lesson-row ${score===undefined?'':'done'}" data-vowel-unit="${unit.id}"><span class="route-index" lang="ja">${glyphs[0]}</span><span class="route-copy"><strong>${unit.name} · The five vowels</strong><small lang="ja">${glyphs}</small><small>${score===undefined?'Introduction, examples, and 15 practice prompts':`Practice complete · best ${score}/15`}</small></span><span class="row-action">${score===undefined?'Open':'Review'}</span></button><div class="kana-deck-link"><button class="practice-choice" type="button" data-full-kana="${unit.deck}" ${!canBrowse||fullDeckLocked?'disabled':''}>Full ${unit.name.toLowerCase()} deck · 46 cards</button>${deckLabel?`<p>${deckLabel}</p>`:''}</div></article>`;
+  list.innerHTML=`<div class="kana-path">${KANA_SCRIPTS.map(script=>{
+    const units=KANA_UNITS.filter(unit=>unit.deck===script.deck);
+    const completed=units.filter(unit=>scores[unit.id]!==undefined).length;
+    const canBrowse=scores[script.id]!==undefined||done[script.deck-3];
+    return `<section class="kana-script-section"><div class="kana-script-heading"><div><h3>${script.name}</h3><p>${script.description}</p></div><span>${completed}/10 groups practised</span></div>${units.map(unit=>{
+      const score=scores[unit.id];
+      const glyphs=kanaEntries(unit).map(entry=>entry.glyph).join(' ');
+      const count=unit.words.length*3;
+      return `<button type="button" class="lesson-row ${score===undefined?'':'done'}" data-kana-unit="${unit.id}"><span class="route-index" lang="ja">${glyphs[0]}</span><span class="route-copy"><strong>${unit.title}</strong><small lang="ja">${glyphs}</small><small>${score===undefined?`Introduction, examples, and ${count} practice prompts`:`Practice complete · best ${score}/${count}`}</small></span><span class="row-action">${score===undefined?'Open':'Review'} →</span></button>`;
+    }).join('')}<div class="kana-deck-link"><button class="practice-choice" type="button" data-full-kana="${script.deck}" ${!canBrowse?'disabled':''}>Full ${script.name.toLowerCase()} deck · 46 cards</button>${!canBrowse?'<p>Practise the vowel group to open the full deck.</p>':'<p>Optional: review all 46 cards in one session.</p>'}</div></section>`;
   }).join('')}</div>${review}`;
-  list.querySelectorAll('[data-vowel-unit]').forEach(button=>{button.onclick=()=>openKanaUnit(KANA_UNITS.find(unit=>unit.id===button.dataset.vowelUnit))});
+  list.querySelectorAll('[data-kana-unit]').forEach(button=>{button.onclick=()=>openKanaUnit(KANA_UNITS.find(unit=>unit.id===button.dataset.kanaUnit))});
   list.querySelectorAll('[data-full-kana]').forEach(button=>{button.onclick=()=>startKanaDeck(Number(button.dataset.fullKana))});
-  if(due.length)list.querySelector('#dueVowels').onclick=()=>startVowelPractice();
+  if(due.length)list.querySelector('#dueKana').onclick=()=>startKanaUnitPractice();
 };
 
 window.startNiReadingCheck=function(){
@@ -1106,7 +1156,7 @@ function sanitize(r){
  }
  if(r.kanaReview&&typeof r.kanaReview==='object'){
   out.kanaReview={};
-  for(const glyph of KANA_VOWELS){
+  for(const glyph of KANA_GLYPHS){
    const card=r.kanaReview[glyph];
    if(card&&Number.isInteger(card.step)&&card.step>=0&&card.step<KANA_INTERVALS.length&&typeof card.due==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(card.due)&&Number.isFinite(Date.parse(card.due))){
     out.kanaReview[glyph]={step:card.step,due:card.due};
@@ -1153,7 +1203,8 @@ var baseOpenStats=openStats;
 openStats=function(){
  baseOpenStats();
  const scores=state.pilotScores||{};
- const activityLabels={hiragana:'Hiragana vowels',katakana:'Katakana vowels',niPractice:'に grammar practice',niReading:'に reading check'};
+ const activityLabels={niPractice:'に grammar practice',niReading:'に reading check'};
+ KANA_UNITS.forEach(unit=>{activityLabels[unit.id]=`${unit.name} · ${unit.title}`});
  const rows=Object.entries(activityLabels).filter(([key])=>scores[key]!==undefined).map(([key,label])=>`<li>${label} <b>${scores[key]}/${pilotScoreSizes[key]}</b></li>`).join('');
  if(rows)document.querySelector('#play').insertAdjacentHTML('beforeend',`<div class="feature-card"><h3>Best practice scores</h3><ul class="pilot-scores">${rows}</ul></div>`);
  document.querySelector('#play').insertAdjacentHTML('beforeend','<div class="feature-card"><h3>Back up your progress</h3><p>Progress lives in this browser only. Save a backup code to keep it safe or move it to another device.</p><button class="soft-button" id="statsBackup">Back up or restore</button></div>');
@@ -1165,6 +1216,11 @@ render();
 </script>
 <style>
 .kana-path{display:grid;gap:14px;margin-bottom:14px}
+.kana-script-section{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.kana-script-section .lesson-row{border-top:1px solid var(--line);border-bottom:0;width:100%}
+.kana-script-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 16px}
+.kana-script-heading h3{margin:0 0 5px}.kana-script-heading p{margin:0;color:var(--muted);font-size:.8rem;line-height:1.5}
+.kana-script-heading>span{color:var(--green);font-size:.75rem;font-weight:700;white-space:nowrap}
 .kana-path-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .kana-path-card .lesson-row{border-top:0;border-bottom:1px solid var(--line);width:100%}
 .kana-deck-link{padding:12px 18px}
