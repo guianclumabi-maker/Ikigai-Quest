@@ -37,9 +37,12 @@ for (let id = 1; id <= 36; id++) {
   callbacks.hashchange();
   assert.ok(reader.innerHTML.includes('Chapter checkpoint'), `Chapter ${id} did not render`);
   assert.ok(reader.innerHTML.includes('15 mixed questions'), `Chapter ${id} has the wrong practice count`);
+  assert.ok(reader.innerHTML.includes('LISTEN BEFORE ANSWERING'), `Chapter ${id} lacks checkpoint audio context`);
   if (id > 2) {
+    assert.ok(reader.innerHTML.includes('READ THIS BEFORE ANSWERING'), `Chapter ${id} lacks its reading source`);
     assert.ok(reader.innerHTML.includes('Conversation 2'), `Chapter ${id} has no second dialogue`);
     assert.ok(reader.innerHTML.includes('Real-life task'), `Chapter ${id} has no task`);
+    assert.ok(reader.innerHTML.includes('id="recording-playback"'), `Chapter ${id} lacks voice playback`);
   }
 }
 for (let id = 1; id <= 7; id++) {
@@ -48,9 +51,17 @@ for (let id = 1; id <= 7; id++) {
   assert.ok(reader.innerHTML.includes('STAGE'), `Stage review ${id} did not render`);
   assert.ok(reader.innerHTML.includes('New reading'), `Stage review ${id} has no new text questions`);
 }
+for (const exam of context.window.ikigaiJft.exams) {
+  for (const section of exam.sections) {
+    for (const group of section.groups) {
+      if (section.title === 'Reading Comprehension') assert.ok(group.text, `Mock ${exam.id} has reading questions without a source`);
+      if (section.title === 'Listening Comprehension') assert.ok(group.script, `Mock ${exam.id} has listening questions without audio`);
+    }
+  }
+}
 for (const route of ['#stats', '#exams']) {
   location.hash = route;
   callbacks.hashchange();
   assert.ok(reader.innerHTML.includes('reader-heading'), `${route} did not render`);
 }
-console.log('Rendered all 36 chapters, 7 stage reviews, Stats, and exam menu.');
+console.log('Rendered all 36 chapters and 7 reviews; checked reading and audio sources in both mocks.');

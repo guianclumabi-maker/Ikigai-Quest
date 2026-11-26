@@ -206,6 +206,13 @@ summary { cursor: pointer; padding: .85rem 1rem; font-weight: 750; color: var(--
 .practice-task textarea:focus-visible { outline: 3px solid #a4cbbb; }
 .question-audio { margin: .25rem 0 .65rem; }
 .question-audio .listen-button { margin-inline-start: 0; padding: .45rem .75rem; }
+.checkpoint-source { margin: 1.3rem 0 .65rem; padding: 1rem 1.1rem; border: 1px solid #cadfd4; border-radius: .75rem; background: #f0f7f2; }
+.checkpoint-source h3 { margin: .25rem 0 .6rem; }
+.checkpoint-source .japanese p { margin: .3rem 0; }
+.checkpoint-source .dialogue-audio { margin-bottom: 0; }
+.voice-practice { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin-top: .8rem; }
+.voice-practice audio { width: min(100%, 24rem); }
+.voice-practice p { flex-basis: 100%; margin: .15rem 0 .35rem; font-size: .85rem; }
 .exam-audio { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-top: .65rem; }
 .exam-audio span { color: var(--muted); font-size: .85rem; }
 .listen-button { display: inline-flex; align-items: center; gap: .3rem; margin-inline-start: .5rem; padding: .3rem .55rem; border: 1px solid #9fcabc; border-radius: 999px; background: #fff; color: var(--green); font: 700 .76rem/1.2 system-ui, sans-serif; cursor: pointer; white-space: nowrap; vertical-align: middle; }

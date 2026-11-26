@@ -8,6 +8,10 @@
   const audioFiles = new Set(window.ikigaiJftAudio || []);
   let activeAudio = null;
   let activeAudioId = null;
+  let practiceRecorder = null;
+  let practiceStream = null;
+  let practicePlaybackUrl = null;
+  let practiceGeneration = 0;
   const stages = [
     { name: 'Start from zero', description: 'The writing systems, introductions, and everyday numbers', ids: [1, 2, 3, 4] },
     { name: 'Daily errands', description: 'Shops, food, transport, and your neighborhood', ids: [5, 6, 7, 8, 9] },
@@ -66,6 +70,18 @@
       button.classList.remove('is-playing');
       button.textContent = '▶ Listen';
     });
+  }
+  function clearPracticeRecording() {
+    practiceGeneration++;
+    if (practiceRecorder?.state === 'recording') {
+      practiceRecorder.onstop = null;
+      practiceRecorder.stop();
+    }
+    practiceStream?.getTracks().forEach(track => track.stop());
+    if (practicePlaybackUrl) URL.revokeObjectURL(practicePlaybackUrl);
+    practiceRecorder = null;
+    practiceStream = null;
+    practicePlaybackUrl = null;
   }
   function continueTo(id, label) {
     return `<div class="section-next"><span>Keep going</span><a href="${lessonLink(currentChapter, id)}">${label} →</a></div>`;
@@ -235,7 +251,18 @@
   }
 
   function checkpointQuestions(lesson) {
-    return lesson.questions.map((q, i) => questionHTML(q, i, null, true, shuffledChoices(q))).join('');
+    const readingStart = lesson.questions.findIndex(q => q.skill === 'Reading');
+    const listeningStart = lesson.questions.findIndex(q => q.skill === 'Listening');
+    return lesson.questions.map((q, i) => {
+      const readingSource = i === readingStart && lesson.passage ? `<div class="checkpoint-source" aria-label="Reading material for the next questions">
+        <p class="label">READ THIS BEFORE ANSWERING</p><h3>${escape(lesson.passage[0])}</h3>
+        <div class="japanese" lang="ja">${lesson.passage.slice(1).flatMap(x => x.split(/<br\s*\/?\s*>/i)).map(line => `<p>${copy(line)}</p>`).join('')}</div>
+        ${lesson.id === 11 ? shiftTable() : ''}</div>` : '';
+      const listeningSource = i === listeningStart ? `<div class="checkpoint-source" aria-label="Audio for the next questions">
+        <p class="label">LISTEN BEFORE ANSWERING</p><h3>${lesson.chart ? 'Hear the word' : 'Hear the conversation'}</h3>
+        <div class="dialogue-audio">${lesson.script.map(([who, ja], index) => `<div><span>${escape(who)}</span>${listenButton(ja, `Play line ${index + 1} by ${who}`)}</div>`).join('')}</div></div>` : '';
+      return readingSource + listeningSource + questionHTML(q, i, null, true, shuffledChoices(q));
+    }).join('');
   }
 
   function score(questions, selections) {
@@ -311,6 +338,12 @@
               <p>${escape(lesson.task[0])}</p>
               <label class="response-label" for="task-response">Your response</label>
               <textarea id="task-response" rows="3" placeholder="Try a short response in Japanese"></textarea>
+              <div class="voice-practice" aria-label="Record and play your answer">
+                <button class="button" id="record-voice" type="button">● Record my answer</button>
+                <button class="button" id="stop-recording" type="button" disabled>Stop recording</button>
+                <audio id="recording-playback" controls hidden></audio>
+                <p id="recording-status" class="muted" role="status">Your recording stays in this browser tab. It disappears when you leave the chapter.</p>
+              </div>
               <p class="muted">Check that your response fits the situation and includes the important detail. Speaking aloud is fine too.</p>
               <details><summary>Show a possible response</summary><div class="details-body"><p class="japanese" lang="ja">${copy(lesson.task[1])}</p></div></details>
               <button class="button task-done" id="mark-task" type="button" ${state.taskDone.includes(id) ? 'disabled' : ''}>${state.taskDone.includes(id) ? 'Task practiced' : 'I practiced this task'}</button>
@@ -390,6 +423,62 @@
       taskButton.disabled = true;
       save();
     });
+    const recordButton = document.querySelector('#record-voice');
+    if (recordButton) {
+      const stopButton = document.querySelector('#stop-recording');
+      const playback = document.querySelector('#recording-playback');
+      const status = document.querySelector('#recording-status');
+      const generation = practiceGeneration;
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        recordButton.disabled = true;
+        status.textContent = 'Recording is unavailable in this browser. You can type or say your answer aloud.';
+      } else {
+        recordButton.addEventListener('click', async () => {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            if (generation !== practiceGeneration) { stream.getTracks().forEach(track => track.stop()); return; }
+            practiceStream = stream;
+            const chunks = [];
+            const recorder = new window.MediaRecorder(stream);
+            practiceRecorder = recorder;
+            recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+            recorder.onstop = () => {
+              stream.getTracks().forEach(track => track.stop());
+              practiceStream = null;
+              if (generation !== practiceGeneration) return;
+              if (!chunks.length) {
+                recordButton.disabled = false;
+                stopButton.disabled = true;
+                status.textContent = 'No audio was captured. Please try recording again.';
+                return;
+              }
+              if (practicePlaybackUrl) URL.revokeObjectURL(practicePlaybackUrl);
+              const clip = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+              practicePlaybackUrl = URL.createObjectURL(clip);
+              playback.src = practicePlaybackUrl;
+              playback.hidden = false;
+              recordButton.disabled = false;
+              stopButton.disabled = true;
+              status.textContent = 'Recording ready. Use the player to hear your answer.';
+            };
+            recorder.start();
+            recordButton.disabled = true;
+            stopButton.disabled = false;
+            status.textContent = 'Recording… speak your answer, then press Stop recording.';
+          } catch {
+            practiceStream?.getTracks().forEach(track => track.stop());
+            practiceStream = null;
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+            status.textContent = 'Microphone access was not available. You can type or say your answer aloud.';
+          }
+        });
+        stopButton.addEventListener('click', () => {
+          if (practiceRecorder?.state === 'recording') practiceRecorder.stop();
+          stopButton.disabled = true;
+        });
+      }
+    }
     const kana = document.querySelector('#kana-toggle');
     if (kana) kana.addEventListener('click', () => {
       const hidden = document.querySelector('#kana-grid').classList.toggle('conceal');
@@ -646,6 +735,7 @@
     const hash = location.hash.slice(1);
     const match = /^chapter-(\d+)(?:\/([a-z]+))?$/.exec(hash);
     const lesson = match && lessonById(Number(match[1]));
+    if (!lesson || currentChapter !== lesson.id) clearPracticeRecording();
     const section = lesson && recognizedSections.includes(match[2]) ? match[2] : null;
     if (hash === 'reader-heading') {
       document.querySelector('#reader-heading')?.focus();
