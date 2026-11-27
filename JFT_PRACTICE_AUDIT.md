@@ -25,9 +25,10 @@ The providers' question counts are their own published claims. Their sites are u
 - Both mocks render all eight listening groups with a play button. Playback advances one group at a time and caps at two plays. Reading groups have visible source texts.
 - All 938 listed JFT clips exist locally, exceed 500 bytes, and have an MP3 header. The audit also checks the 210 distinct clips referenced by chapter dialogue, question audio, stage reviews, and mock listening.
 - The 24 mock listening and 24 mock reading answer keys were checked against their scripts and texts; no source-answer mismatch was found in those 48 items.
+- The separate [reading and listening bank](jft-practice.html) adds 40 original sets in each skill, five questions per set. All 40 new listening sets have a generated MP3 and an HTML audio player; the 20-question timed mix renders two reading sources and two players. Automated checks confirm each correct answer's Japanese clue appears in its source.
 
 ## Remaining limits
 
 - MP3 existence and header checks do not prove pronunciation, natural intonation, or actual playback on every browser and hosting deployment.
 - Mock dialogues use a synthetic voice, so they do not yet test understanding across different human speakers and accents.
-- The Japanese and answer keys across all 540 chapter questions and the external banks have not had a complete human review.
+- The Japanese and answer keys across all 540 chapter questions, the 400 new bank questions, and the external banks have not had a complete human review.

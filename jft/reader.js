@@ -608,6 +608,10 @@
         <p>Each mock has 48 original questions and a 60-minute timer. The reading sections include schedules, notices, a personal account, and an information sheet. You’ll get your score and explanations at the end.</p>
         <p>Listening sections play one group at a time, up to twice per recording. Scripts and explanations appear after you submit the mock.</p>
         <p>For extra reading practice, open the seven stage reviews. Each now has a second original everyday message or notice and five new comprehension questions.</p>
+        <section><h2>Original reading and listening bank</h2>
+          <p>Practise 40 new reading sets and 40 new listening sets, with five explained questions in each. The listening sets include playable recordings; the Japanese transcript appears after you submit. Try a 20-question timed mix when you are ready.</p>
+          <a class="button strong" href="jft-practice.html">Open the practice bank →</a>
+        </section>
         <p class="muted">The everyday task approach follows <a href="https://www.irodori.jpf.go.jp/en/about.html">Irodori’s Can-do study model</a>. The Ikigai Quest texts and questions here are original, not official Irodori or JFT-Basic items.</p>
         ${exams.map(exam => `<section><h2>Mock ${exam.id.toUpperCase()}</h2>
           <p class="muted">${Number.isInteger(state.mockBest[exam.id]) ? `Best score: ${state.mockBest[exam.id]} / 48` : 'Four sections · 12 questions each'}</p>

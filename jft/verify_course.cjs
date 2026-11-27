@@ -99,6 +99,7 @@ for (const route of ['#stats', '#exams']) {
   assert.ok(reader.innerHTML.includes('reader-heading'), `${route} did not render`);
 }
 assert.ok(reader.innerHTML.includes('Free extra reading and listening practice'), 'Exam prep lacks external practice links');
+assert.ok(reader.innerHTML.includes('href="jft-practice.html"'), 'Exam prep lacks the original practice bank');
 for (const domain of ['freetag.jp', 'zuttonihon.jp', 'jftprep.com']) {
   assert.ok(reader.innerHTML.includes(domain), `Exam prep lacks ${domain}`);
 }
