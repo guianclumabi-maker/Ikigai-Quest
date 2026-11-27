@@ -5,7 +5,7 @@ const vm = require('node:vm');
 
 const file = name => fs.readFileSync(path.join(__dirname, name + '.js'), 'utf8');
 const scripts = ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice', 'stage-reviews', 'real-life-readings', 'mock-variety', 'audio-manifest', 'reader'];
-const run = (group, plays = {}, version = 2) => {
+const run = (group, plays = {}, version = 2, examId = 'a') => {
   const reader = { innerHTML: '', listeners: {}, addEventListener(name, fn) { this.listeners[name] = fn; }, querySelectorAll: () => [] };
   const elements = new Map();
   const el = key => {
@@ -17,8 +17,8 @@ const run = (group, plays = {}, version = 2) => {
     return elements.get(key);
   };
   const callbacks = {};
-  const location = { hash: '#mock-a' };
-  let stored = JSON.stringify({ attempts: { a: {
+  const location = { hash: `#mock-${examId}` };
+  let stored = JSON.stringify({ attempts: { [examId]: {
     version, deadline: Date.now() + 3_600_000, section: 2, group,
     plays, answers: Array(48).fill(null),
   } } });
@@ -52,6 +52,15 @@ assert.doesNotMatch(first.reader.innerHTML, /staff member at a station/);
 assert.equal(first.getStored().attempts.a.group, 1);
 assert.match(run(0, {}, 1).reader.innerHTML, /Start 60-minute mock/, 'A saved attempt from the older question set should restart');
 
+for (const examId of ['a', 'b']) {
+  for (let group = 0; group < 4; group++) {
+    const rendered = run(group, {}, 2, examId).reader.innerHTML;
+    assert.match(rendered, /class="exam-audio"/, `Mock ${examId} listening group ${group + 1} has no audio area`);
+    assert.match(rendered, /data-audio-id="[a-f0-9]+"/, `Mock ${examId} listening group ${group + 1} has no play button`);
+    assert.match(rendered, new RegExp(`Audio ${group + 1} of 4`), `Mock ${examId} listening group ${group + 1} did not render`);
+  }
+}
+
 const audioId = value => {
   let hash = 2166136261;
   for (let i = 0; i < value.length; i++) hash = Math.imul(hash ^ value.charCodeAt(i), 16777619) >>> 0;
@@ -74,4 +83,4 @@ assert.equal(second.getStored().attempts.a.plays[button.dataset.audioId], 2);
 assert.equal(button.disabled, true);
 click();
 assert.equal(second.getStored().attempts.a.plays[button.dataset.audioId], 2);
-console.log('Mock listening advances one group at a time and caps playback at two.');
+console.log('Both mocks render a play button for all eight listening groups; playback advances one group at a time and caps at two.');

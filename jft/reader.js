@@ -617,6 +617,15 @@
           <ol>${officialSamples.map(([section, category, purpose], i) => `<li><a href="https://www.jpf.go.jp/jft-basic/sample/q${number(i + 1)}.html" target="_blank" rel="noopener noreferrer">Sample ${number(i + 1)} · ${escape(category)}</a> <span class="muted">${escape(section)} · ${escape(purpose)}</span></li>`).join('')}</ol>
           <p><a href="https://www.jpf.go.jp/jft-basic/e/faq/">Japan Foundation FAQ on published questions</a></p>
         </section>
+        <section><h2>Free extra reading and listening practice</h2>
+          <p>Use these independent question banks for unfamiliar material. Their questions and mock scores are not official JFT-Basic items or score predictions.</p>
+          <ul>
+            <li><a href="https://freetag.jp/en/jft-basic/index.html" target="_blank" rel="noopener noreferrer">FreeTag JFT-Basic practice</a> · separate reading and listening sets, MP3 listening clips, and timed practice. The publisher says it has 200 questions in each section.</li>
+            <li><a href="https://zuttonihon.jp/app/jft-basic/en/" target="_blank" rel="noopener noreferrer">Zutto Nihon practice</a> · reading and listening questions plus one timed mock. Listening uses your device’s read-aloud voice.</li>
+            <li><a href="https://jftprep.com/jft-basic-mock-test" target="_blank" rel="noopener noreferrer">JFT Prep free mock 1</a> · a 50-question, 60-minute test with reading and two-play listening. Further mocks are paid.</li>
+          </ul>
+          <p>Check the <a href="https://www.jpf.go.jp/jft-basic/sample/q07.html" target="_blank" rel="noopener noreferrer">official listening sample</a> and <a href="https://www.jpf.go.jp/jft-basic/sample/q10.html" target="_blank" rel="noopener noreferrer">official reading sample</a> for the exam’s own presentation.</p>
+        </section>
         <section><h2>Official test format</h2>
           <p>These mocks use practice scores. When you want to try the real interface, open the Japan Foundation’s sample questions.</p>
           <a href="https://www.jpf.go.jp/jft-basic/sample/q01.html">Official JFT-Basic sample questions</a>

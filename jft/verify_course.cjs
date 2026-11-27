@@ -60,6 +60,7 @@ for (let id = 1; id <= 36; id++) {
   assert.ok(reader.innerHTML.includes('Chapter checkpoint'), `Chapter ${id} did not render`);
   assert.ok(reader.innerHTML.includes('15 mixed questions'), `Chapter ${id} has the wrong practice count`);
   assert.ok(reader.innerHTML.includes('LISTEN BEFORE ANSWERING'), `Chapter ${id} lacks checkpoint audio context`);
+  assert.ok(reader.innerHTML.includes('data-audio-id='), `Chapter ${id} has no rendered play button`);
   if (id > 2) {
     assert.ok(reader.innerHTML.includes('READ THIS BEFORE ANSWERING'), `Chapter ${id} lacks its reading source`);
     assert.ok(reader.innerHTML.includes('Conversation 2'), `Chapter ${id} has no second dialogue`);
@@ -74,6 +75,7 @@ for (let id = 1; id <= 7; id++) {
   assert.ok(reader.innerHTML.includes('New reading'), `Stage review ${id} has no new text questions`);
   assert.ok(reader.innerHTML.includes('new reading</p>'), `Stage review ${id} lacks its second reading`);
   assert.ok(reader.innerHTML.includes('Everyday reading'), `Stage review ${id} lacks new comprehension questions`);
+  assert.ok(reader.innerHTML.includes('aria-label="Play the question audio"'), `Stage review ${id} has no listening play button`);
 }
 assert.equal(context.window.ikigaiJftReadings.length, 7, 'Expected a new text for each stage');
 for (const reading of context.window.ikigaiJftReadings) {
@@ -95,6 +97,10 @@ for (const route of ['#stats', '#exams']) {
   location.hash = route;
   callbacks.hashchange();
   assert.ok(reader.innerHTML.includes('reader-heading'), `${route} did not render`);
+}
+assert.ok(reader.innerHTML.includes('Free extra reading and listening practice'), 'Exam prep lacks external practice links');
+for (const domain of ['freetag.jp', 'zuttonihon.jp', 'jftprep.com']) {
+  assert.ok(reader.innerHTML.includes(domain), `Exam prep lacks ${domain}`);
 }
 console.log('Rendered all 36 chapters and 7 reviews; checked reading and audio sources in both mocks.');
 
