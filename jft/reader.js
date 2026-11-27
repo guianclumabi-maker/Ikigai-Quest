@@ -23,6 +23,19 @@
     { name: 'Community and work', description: 'Manners, events, handovers, problems, and safety', ids: [28, 29, 30, 31, 32, 33] },
     { name: 'Your next steps', description: 'Progress, future goals, and information search', ids: [34, 35, 36] },
   ];
+  const officialSamples = [
+    ['Script and vocabulary', 'Word meaning', 'Recognize a word from its context'],
+    ['Script and vocabulary', 'Word usage', 'Choose a word that fits a sentence'],
+    ['Script and vocabulary', 'Kanji reading', 'Choose a written word’s reading'],
+    ['Script and vocabulary', 'Kanji meaning and usage', 'Use the right kanji word in context'],
+    ['Conversation and expression', 'Grammar', 'Complete a sentence for the situation'],
+    ['Conversation and expression', 'Expression', 'Choose a natural reply'],
+    ['Listening', 'Conversation', 'Understand a social exchange'],
+    ['Listening', 'Shop or public place', 'Understand a service exchange'],
+    ['Listening', 'Announcement or instruction', 'Find details in spoken information'],
+    ['Reading', 'Content comprehension', 'Answer questions about an event account'],
+    ['Reading', 'Information search', 'Compare details on a medicine information sheet'],
+  ];
   const storageKey = 'ikigaiJftProgressV1';
   let state = { done: [], taskDone: [], best: {}, missed: {}, reviewBest: {}, mockBest: {}, attempts: {}, last: null, furigana: true };
   try {
@@ -60,9 +73,10 @@
     for (let i = 0; i < value.length; i++) hash = Math.imul(hash ^ value.charCodeAt(i), 16777619) >>> 0;
     return 'a' + hash.toString(16).padStart(8, '0');
   }
-  function listenButton(value, label = 'Listen to the Japanese') {
+  function listenButton(value, label = 'Listen to the Japanese', mockExam = '') {
     const id = audioId(value);
-    return audioFiles.has(id) ? `<button class="listen-button" type="button" data-audio-id="${id}" aria-label="${escape(label)}">▶ Listen</button>` : '';
+    const plays = mockExam ? Number(state.attempts[mockExam]?.plays?.[id]) || 0 : 0;
+    return audioFiles.has(id) ? `<button class="listen-button" type="button" data-audio-id="${id}" ${mockExam ? `data-mock-exam="${escape(mockExam)}" ${plays >= 2 ? 'disabled' : ''}` : ''} aria-label="${escape(label)}">${mockExam ? plays >= 2 ? 'Played twice' : `▶ Listen · ${2 - plays} plays left` : '▶ Listen'}</button>` : '';
   }
   function stopAudio() {
     if (activeAudio) activeAudio.pause();
@@ -70,7 +84,9 @@
     activeAudioId = null;
     if (reader.querySelectorAll) reader.querySelectorAll('[data-audio-id]').forEach(button => {
       button.classList.remove('is-playing');
-      button.textContent = '▶ Listen';
+      const plays = button.dataset.mockExam ? Number(state.attempts[button.dataset.mockExam]?.plays?.[button.dataset.audioId]) || 0 : 0;
+      button.textContent = button.dataset.mockExam ? plays >= 2 ? 'Played twice' : `▶ Listen · ${2 - plays} plays left` : '▶ Listen';
+      if (button.dataset.mockExam) button.disabled = plays >= 2;
     });
   }
   function clearPracticeRecording() {
@@ -589,13 +605,18 @@
     reader.innerHTML = `<div class="reader-top"><a href="#chapters">All JFT-Basic chapters</a>${downloadLink()}</div>
       <article class="sheet exam-layout">
         <p class="label">EXAM PRACTICE</p><h1 id="reader-heading" tabindex="-1">JFT-Basic practice exams</h1>
-        <p>Each mock has 48 original questions and a 60-minute timer. You’ll get your score and explanations at the end.</p>
-        <p>Listening sections include playable Japanese audio. Scripts and explanations appear after you submit the mock.</p>
+        <p>Each mock has 48 original questions and a 60-minute timer. The reading sections include schedules, notices, a personal account, and an information sheet. You’ll get your score and explanations at the end.</p>
+        <p>Listening sections play one group at a time, up to twice per recording. Scripts and explanations appear after you submit the mock.</p>
         <p>For extra reading practice, open the seven stage reviews. Each now has a second original everyday message or notice and five new comprehension questions.</p>
         <p class="muted">The everyday task approach follows <a href="https://www.irodori.jpf.go.jp/en/about.html">Irodori’s Can-do study model</a>. The Ikigai Quest texts and questions here are original, not official Irodori or JFT-Basic items.</p>
         ${exams.map(exam => `<section><h2>Mock ${exam.id.toUpperCase()}</h2>
           <p class="muted">${Number.isInteger(state.mockBest[exam.id]) ? `Best score: ${state.mockBest[exam.id]} / 48` : 'Four sections · 12 questions each'}</p>
           <a class="button strong" href="#mock-${exam.id}">${validAttempt(exam) ? 'Resume' : 'Open'} Mock ${exam.id.toUpperCase()}</a></section>`).join('')}
+        <section><h2>Official sample question map</h2>
+          <p>The Japan Foundation publishes 11 sample screens across the test categories. Past test questions are not publicly released. Open the originals to see their layout and question style; the Ikigai Quest practice items are independently written.</p>
+          <ol>${officialSamples.map(([section, category, purpose], i) => `<li><a href="https://www.jpf.go.jp/jft-basic/sample/q${number(i + 1)}.html" target="_blank" rel="noopener noreferrer">Sample ${number(i + 1)} · ${escape(category)}</a> <span class="muted">${escape(section)} · ${escape(purpose)}</span></li>`).join('')}</ol>
+          <p><a href="https://www.jpf.go.jp/jft-basic/e/faq/">Japan Foundation FAQ on published questions</a></p>
+        </section>
         <section><h2>Official test format</h2>
           <p>These mocks use practice scores. When you want to try the real interface, open the Japan Foundation’s sample questions.</p>
           <a href="https://www.jpf.go.jp/jft-basic/sample/q01.html">Official JFT-Basic sample questions</a>
@@ -607,7 +628,7 @@
 
   function validAttempt(exam) {
     const attempt = state.attempts[exam.id];
-    return attempt && Number.isFinite(attempt.deadline) && Array.isArray(attempt.answers)
+    return attempt && attempt.version === 2 && Number.isFinite(attempt.deadline) && Array.isArray(attempt.answers)
       && Number.isInteger(attempt.section) && exam.sections[attempt.section] ? attempt : null;
   }
 
@@ -671,8 +692,11 @@
       document.querySelector('#begin-mock').addEventListener('click', () => {
         const questions = exam.sections.flatMap(questionsIn);
         state.attempts[exam.id] = {
+          version: 2,
           deadline: Date.now() + 60 * 60 * 1000,
           section: 0,
+          group: 0,
+          plays: {},
           answers: questions.map(() => null),
           choices: questions.map(shuffledChoices),
         };
@@ -687,23 +711,28 @@
       return;
     }
     const section = exam.sections[attempt.section];
+    const listening = section.title === 'Listening Comprehension';
+    const groupIndex = listening && Number.isInteger(attempt.group) ? Math.min(attempt.group, section.groups.length - 1) : 0;
+    const visibleGroups = listening ? [section.groups[groupIndex]] : section.groups;
     let offset = exam.sections.slice(0, attempt.section).reduce((total, s) => total + questionsIn(s).length, 0);
+    if (listening) offset += section.groups.slice(0, groupIndex).reduce((total, group) => total + group.questions.length, 0);
     reader.innerHTML = `<div class="reader-top"><a href="#exams">Exit to exam practice</a></div>
       <article class="sheet exam-layout">
-        <div class="exam-header"><p class="label">${name} · Section ${attempt.section + 1} of ${exam.sections.length}</p>
+        <div class="exam-header"><p class="label">${name} · Section ${attempt.section + 1} of ${exam.sections.length}${listening ? ` · Audio ${groupIndex + 1} of ${section.groups.length}` : ''}</p>
           <p class="clock" id="mock-clock" aria-label="Time remaining" role="timer"></p></div>
         <h1 id="reader-heading" tabindex="-1">${section.title}</h1>
+        ${listening ? '<p class="muted">Listen up to twice, answer this group, then continue. Earlier listening groups cannot be reopened during this attempt.</p>' : ''}
         <form id="mock-form">
-          ${section.groups.map(group => `
+          ${visibleGroups.map(group => `
             ${group.text ? `<div class="mock-source">
               <p class="${group.script ? '' : 'japanese'}" ${group.script ? '' : 'lang="ja"'}>${copy(group.text, false)}</p>
-              ${group.script ? `<div class="exam-audio">${listenButton(group.script, 'Play the listening recording')}<span>Listen, then answer the questions below.</span></div>` : ''}
+              ${group.script ? `<div class="exam-audio">${listenButton(group.script, 'Play the listening recording', exam.id)}<span>Listen, then answer the questions below.</span></div>` : ''}
             </div>` : ''}
             ${group.questions.map(question => {
               const number = offset++;
               return questionHTML(question, number, attempt.answers[number], false, attempt.choices?.[number]);
             }).join('')}`).join('')}
-          <button class="button strong" type="submit">${attempt.section === exam.sections.length - 1 ? 'Submit mock' : 'Submit section and continue'}</button>
+          <button class="button strong" type="submit">${attempt.section === exam.sections.length - 1 ? 'Submit mock' : listening && groupIndex < section.groups.length - 1 ? 'Continue to next audio' : 'Submit section and continue'}</button>
         </form>
       </article>`;
     const form = document.querySelector('#mock-form');
@@ -714,10 +743,17 @@
     });
     form.addEventListener('submit', event => {
       event.preventDefault();
-      if (attempt.section === exam.sections.length - 1) {
+      if (listening && groupIndex < section.groups.length - 1) {
+        attempt.group = groupIndex + 1;
+        save();
+        showMock(exam);
+        setHeading(document.querySelector('#reader-heading'), true);
+        window.scrollTo(0, 0);
+      } else if (attempt.section === exam.sections.length - 1) {
         finishExam(exam, attempt);
       } else {
         attempt.section++;
+        attempt.group = 0;
         save();
         showMock(exam);
         setHeading(document.querySelector('#reader-heading'), true);
@@ -809,9 +845,18 @@
   reader.addEventListener('click', event => {
     const button = event.target.closest?.('[data-audio-id]');
     if (!button) return;
+    if (button.disabled) return;
     const playingThisClip = activeAudio && activeAudioId === button.dataset.audioId;
     stopAudio();
     if (playingThisClip) return;
+    if (button.dataset.mockExam) {
+      const attempt = state.attempts[button.dataset.mockExam];
+      if (!attempt) return;
+      attempt.plays ||= {};
+      if ((attempt.plays[button.dataset.audioId] || 0) >= 2) return;
+      attempt.plays[button.dataset.audioId] = (attempt.plays[button.dataset.audioId] || 0) + 1;
+      save();
+    }
     const audio = new Audio(`jft/audio/${button.dataset.audioId}.mp3`);
     activeAudio = audio;
     activeAudioId = button.dataset.audioId;

@@ -28,7 +28,7 @@ const context = vm.createContext({
   document: doc, location, localStorage: { getItem: () => null, setItem() {} },
   console, Date, Math, Set, Number, clearInterval() {},
 });
-for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice', 'stage-reviews', 'real-life-readings', 'audio-manifest', 'reader']) {
+for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice', 'stage-reviews', 'real-life-readings', 'mock-variety', 'audio-manifest', 'reader']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, `${file}.js`), 'utf8'), context, { filename: file });
 }
 function checkQuestion(question, where) {
@@ -47,6 +47,12 @@ for (const exam of context.window.ikigaiJft.exams) {
   assert.equal(questions.length, 48, `Mock ${exam.id} does not have 48 questions`);
   questions.forEach((question, index) => checkQuestion(question, `Mock ${exam.id} question ${index + 1}`));
 }
+const mockA = context.window.ikigaiJft.exams.find(exam => exam.id === 'a');
+const mockB = context.window.ikigaiJft.exams.find(exam => exam.id === 'b');
+assert.ok(mockA.sections[3].groups[2].text.includes('薬の案内'), 'Mock A lacks the new information-search text');
+assert.ok(mockA.sections[3].groups[3].text.includes('音楽会'), 'Mock A lacks the new account');
+assert.ok(mockB.sections[3].groups[1].text.includes('仕事の予定'), 'Mock B lacks the new schedule');
+assert.ok(mockB.sections[3].groups[3].text.includes('水を止めます'), 'Mock B lacks the new notice');
 assert.ok(reader.innerHTML.includes('Your study path'), 'Home route failed');
 for (let id = 1; id <= 36; id++) {
   location.hash = `#chapter-${id}`;
@@ -109,5 +115,5 @@ onLoad();
 assert.equal(failedReader.innerHTML, 'Course loaded', 'Load check replaced a working course');
 const entry = fs.readFileSync(path.join(__dirname, '..', 'jft-basic.html'), 'utf8');
 const versionedAssets = [...entry.matchAll(/(?:src|href)="(jft\/(?:[\w-]+\.(?:js|css))\?v=([^"]+))"/g)];
-assert.equal(versionedAssets.length, 12, 'A JFT asset is not versioned');
+assert.equal(versionedAssets.length, 13, 'A JFT asset is not versioned');
 assert.equal(new Set(versionedAssets.map(match => match[2])).size, 1, 'JFT assets have mixed versions');
