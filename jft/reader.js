@@ -4,6 +4,7 @@
   if (!reader || !window.ikigaiJft?.lessons?.length) return;
   const { lessons, exams } = window.ikigaiJft;
   const reviews = window.ikigaiJftReviews || [];
+  const extraReadings = window.ikigaiJftReadings || [];
   const workbook = 'pdf/Ikigai_Quest_JFT_Basic_A2_Learner_Workbook.pdf';
   const title = 'Japanese for Life in Japan';
   const audioFiles = new Set(window.ikigaiJftAudio || []);
@@ -164,7 +165,7 @@
               return `<li><a href="${lessonLink(id)}" class="${rowClass}"><span class="chapter-number">${number(id)}</span>
                 <span><span class="chapter-title">${escape(chapter.title)}</span><span class="chapter-goal">${escape(chapter.goal)}</span></span>${mark}
               </a></li>`;
-            }).join('')}</ol><a class="stage-review-link" href="#review-${index + 1}">Stage review · new reading and listening ${Number.isInteger(state.reviewBest[index + 1]) ? `· best ${state.reviewBest[index + 1]}` : ''} →</a></details>`;
+            }).join('')}</ol><a class="stage-review-link" href="#review-${index + 1}">Stage review · two new readings and listening ${Number.isInteger(state.reviewBest[index + 1]) ? `· best ${state.reviewBest[index + 1]}` : ''} →</a></details>`;
         }).join('')}
         <p class="course-crosslink">Studying for the Japanese-Language Proficiency Test? <a href="JLPT_Reading_Quest.html">Open the JLPT N5/N4 course.</a></p>
       </section><aside class="home-rail" aria-label="After the chapters">
@@ -525,6 +526,10 @@
     const sourceQuestions = review.questions.map(([prompt, choices, answer, why, skill]) => ({
       prompt, choices, answer, why, skill: skill || 'New reading', audio: skill === 'Listening' ? review.spoken : undefined,
     }));
+    const reading = extraReadings.find(item => item.stage === review.id);
+    const extendedQuestions = reading ? reading.questions.map(([prompt, choices, answer, why]) => ({
+      prompt, choices, answer, why, skill: 'Everyday reading',
+    })) : [];
     const stage = stages[review.id - 1];
     const recap = stage.ids.flatMap(id => {
       const lesson = lessonById(id);
@@ -532,19 +537,29 @@
       const expression = lesson.questions.find(q => q.skill === 'Expression');
       return [vocabulary, expression].filter(Boolean);
     }).slice(0, 8);
-    return [...sourceQuestions, ...recap];
+    return [...sourceQuestions, ...extendedQuestions, ...recap];
   }
 
   function showReview(review) {
     const questions = reviewQuestions(review);
+    const reading = extraReadings.find(item => item.stage === review.id);
+    const sourceCount = review.questions.length;
+    const readingCount = reading?.questions.length || 0;
     reader.innerHTML = `<div class="reader-top"><a href="#chapters">All JFT-Basic chapters</a></div>
       <article class="sheet exam-layout"><p class="label">STAGE ${number(review.id)} REVIEW</p>
         <h1 id="reader-heading" tabindex="-1">${escape(review.title)}</h1>
-        <p>Read a new everyday text, listen to a new message, then review words and expressions from this stage.</p>
-        <div class="passage"><h2>${escape(review.sourceTitle)}</h2><p class="japanese" lang="ja">${copy(review.source)}</p></div>
+        <p>Read two original everyday texts, listen to a new message, then review words and expressions from this stage.</p>
         <p class="muted">${questions.length} questions · Best score: ${Number.isInteger(state.reviewBest[review.id]) ? `${state.reviewBest[review.id]} / ${questions.length}` : 'Not taken yet'}</p>
         <form id="review-form"><fieldset class="checkpoint-items" aria-label="Stage review questions">
-          ${questions.map((q, i) => questionHTML(q, i, null, true, shuffledChoices(q))).join('')}</fieldset>
+          <div class="passage"><h2>${escape(review.sourceTitle)}</h2><p class="japanese" lang="ja">${copy(review.source)}</p></div>
+          ${questions.slice(0, sourceCount).map((q, i) => questionHTML(q, i, null, true, shuffledChoices(q))).join('')}
+          ${reading ? `<div class="passage"><p class="label">${escape(reading.kind)} · new reading</p><h2>${escape(reading.title)}</h2>
+            <div class="passage-lines japanese" lang="ja">${reading.source.map(line => `<p>${copy(line)}</p>`).join('')}</div></div>
+            ${questions.slice(sourceCount, sourceCount + readingCount).map((q, i) => questionHTML(q, i + sourceCount, null, true, shuffledChoices(q))).join('')}
+            <div class="practice-task"><h3>Use it yourself</h3><p>${escape(reading.task[0])}</p>
+              <details><summary>See a possible response</summary><p class="japanese" lang="ja">${copy(reading.task[1])}</p></details></div>` : ''}
+          ${questions.slice(sourceCount + readingCount).map((q, i) => questionHTML(q, i + sourceCount + readingCount, null, true, shuffledChoices(q))).join('')}
+          </fieldset>
           <button class="button strong" type="submit">Check my answers</button></form>
         <div class="result" id="review-result" tabindex="-1" aria-live="polite"></div>
         <a class="button" href="#review-${review.id}" id="retry-review" hidden>Try review again</a>
@@ -559,6 +574,7 @@
       save();
       document.querySelector('#review-result').innerHTML = `<h2>${points} of ${questions.length} correct</h2>
         <p><strong>New text in English:</strong> ${escape(review.translation)}</p>
+        ${reading ? `<p><strong>${escape(reading.title)} in English:</strong> ${escape(reading.translation)}</p>` : ''}
         <p><strong>Spoken message:</strong> ${copy(review.spoken)}</p>${answerList(questions, selected)}`;
       form.querySelector('fieldset').disabled = true;
       form.querySelector('button[type=submit]').disabled = true;
@@ -575,6 +591,8 @@
         <p class="label">EXAM PRACTICE</p><h1 id="reader-heading" tabindex="-1">JFT-Basic practice exams</h1>
         <p>Each mock has 48 original questions and a 60-minute timer. You’ll get your score and explanations at the end.</p>
         <p>Listening sections include playable Japanese audio. Scripts and explanations appear after you submit the mock.</p>
+        <p>For extra reading practice, open the seven stage reviews. Each now has a second original everyday message or notice and five new comprehension questions.</p>
+        <p class="muted">The everyday task approach follows <a href="https://www.irodori.jpf.go.jp/en/about.html">Irodori’s Can-do study model</a>. The Ikigai Quest texts and questions here are original, not official Irodori or JFT-Basic items.</p>
         ${exams.map(exam => `<section><h2>Mock ${exam.id.toUpperCase()}</h2>
           <p class="muted">${Number.isInteger(state.mockBest[exam.id]) ? `Best score: ${state.mockBest[exam.id]} / 48` : 'Four sections · 12 questions each'}</p>
           <a class="button strong" href="#mock-${exam.id}">${validAttempt(exam) ? 'Resume' : 'Open'} Mock ${exam.id.toUpperCase()}</a></section>`).join('')}

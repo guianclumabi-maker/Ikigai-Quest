@@ -28,7 +28,7 @@ const context = vm.createContext({
   document: doc, location, localStorage: { getItem: () => null, setItem() {} },
   console, Date, Math, Set, Number, clearInterval() {},
 });
-for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice', 'stage-reviews', 'audio-manifest', 'reader']) {
+for (const file of ['content', 'expansion', 'expansion-more', 'expansion-final', 'deep-practice', 'stage-reviews', 'real-life-readings', 'audio-manifest', 'reader']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, `${file}.js`), 'utf8'), context, { filename: file });
 }
 function checkQuestion(question, where) {
@@ -66,6 +66,16 @@ for (let id = 1; id <= 7; id++) {
   callbacks.hashchange();
   assert.ok(reader.innerHTML.includes('STAGE'), `Stage review ${id} did not render`);
   assert.ok(reader.innerHTML.includes('New reading'), `Stage review ${id} has no new text questions`);
+  assert.ok(reader.innerHTML.includes('new reading</p>'), `Stage review ${id} lacks its second reading`);
+  assert.ok(reader.innerHTML.includes('Everyday reading'), `Stage review ${id} lacks new comprehension questions`);
+}
+assert.equal(context.window.ikigaiJftReadings.length, 7, 'Expected a new text for each stage');
+for (const reading of context.window.ikigaiJftReadings) {
+  assert.ok(reading.source.length >= 5, `Stage ${reading.stage} reading is too short`);
+  assert.equal(reading.task.length, 2, `Stage ${reading.stage} has no use-it-yourself task`);
+  assert.equal(reading.questions.length, 5, `Stage ${reading.stage} needs five new questions`);
+  reading.questions.forEach(([prompt, choices, answer, why], i) =>
+    checkQuestion({ prompt, choices, answer, why }, `Stage ${reading.stage} new reading ${i + 1}`));
 }
 for (const exam of context.window.ikigaiJft.exams) {
   for (const section of exam.sections) {
@@ -99,5 +109,5 @@ onLoad();
 assert.equal(failedReader.innerHTML, 'Course loaded', 'Load check replaced a working course');
 const entry = fs.readFileSync(path.join(__dirname, '..', 'jft-basic.html'), 'utf8');
 const versionedAssets = [...entry.matchAll(/(?:src|href)="(jft\/(?:[\w-]+\.(?:js|css))\?v=([^"]+))"/g)];
-assert.equal(versionedAssets.length, 11, 'A JFT asset is not versioned');
+assert.equal(versionedAssets.length, 12, 'A JFT asset is not versioned');
 assert.equal(new Set(versionedAssets.map(match => match[2])).size, 1, 'JFT assets have mixed versions');
