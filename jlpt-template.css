@@ -71,7 +71,7 @@ body { background: var(--paper); color: var(--ink); }
   border-radius: 8px;
 }
 .study-path-switch a {
-  min-width: 118px;
+  min-width: 0;
   padding: 7px 12px;
   border-radius: 6px;
   color: var(--muted);
@@ -79,6 +79,10 @@ body { background: var(--paper); color: var(--ink); }
   text-decoration: none;
   font-size: .8rem;
   font-weight: 700;
+}
+@media (max-width: 460px) {
+  .study-path-switch { width: 100%; }
+  .study-path-switch a { flex: 1; padding-inline: 6px; font-size: .72rem; }
 }
 .study-path-switch a[aria-current] { background: var(--card); color: var(--green); box-shadow: 0 1px 5px #0e3f3510; }
 .top-hint { color: var(--muted); font-size: .77rem; font-weight: 400; }
