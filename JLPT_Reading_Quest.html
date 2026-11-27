@@ -14,6 +14,10 @@
 .particle-when-example p:last-child{font-size:14px;color:#536675}.particle-when-note{margin:13px 0 0;font-size:14px;line-height:1.55;color:#536675}
 .lesson-result .next-lesson-btn{background:var(--mint);color:var(--green);border:1px solid #b8ddd4}
 .lesson-result .next-lesson-btn span{display:block;margin-top:3px;font-size:12px;font-weight:500}
+.kana-answer-audio{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px auto 4px;padding:11px 14px;width:max-content;max-width:100%;border:1px solid #b8ddd4;border-radius:12px;background:var(--mint)}
+.kana-answer-audio[hidden]{display:none}.kana-answer-audio span{font-size:17px;font-weight:700}.kana-answer-audio small{font-size:13px;color:var(--green)}
+.kana-answer-audio .say{width:40px;height:40px;flex:none;display:inline-grid;place-items:center;padding:0;border:1px solid #b8ddd4;background:#fffefa;border-radius:50%;color:var(--green)}
+.kana-answer-audio .say:hover{background:#f1fbf6}
 </style>
 
 <style>
@@ -689,8 +693,8 @@ function tileGloss(t){
   if(q)return q[1];
   return d.replace(/\s*\([^)]*\)\s*/g,' ').trim();
 }
-function sayButtonHtml(sentence,kanaRecording=false){
-  var label=kanaRecording?'Hear how '+sentence+' is pronounced':'Play audio';
+function sayButtonHtml(sentence,kanaRecording=false,customLabel=''){
+  var label=customLabel||(kanaRecording?'Hear how '+sentence+' is pronounced':'Play audio');
   return '<button type="button" class="say" data-say="'+escAttr(sentence)+'"'+(kanaRecording?' data-kana-recording':'')+' title="'+escAttr(label)+'" aria-label="'+escAttr(label)+'">'+
     '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>';
 }
@@ -826,7 +830,7 @@ function showQuizQuestion(){
  var q=Z.cfg.items[Z.i],instant=Z.cfg.instant;Z.answered=false;
  var passage=Z.cfg.passage?'<details class="pilot-details"><summary>Read the passage</summary>'+Z.cfg.passage+'</details>':'';
  var note=q.again?'<p class="pilot-reminder">One more try for a character you missed.</p>':'';
- play.innerHTML='<h2 id="modalTitle">'+Z.cfg.title+'</h2><p class="lesson-goal">'+Z.cfg.goal+'</p><div class="qcount"><span>QUESTION '+(Z.i+1)+' OF '+total+'</span><span>'+(instant?Z.right+' RIGHT':'ANSWERS SHOWN AT THE END')+'</span></div><div class="qbar"><i style="width:'+(Z.i/total*100)+'%"></i></div><div class="question">'+furigana(q.prompt)+(q.say?'<div class="listen-row">'+sayButtonHtml(q.say)+'<span>Tap to hear it again</span></div>':'')+'</div>'+note+passage+'<div class="choices">'+q.options.map(function(a,i){return '<button class="choice" data-qz="'+i+'"><span class="letter">'+String.fromCharCode(65+i)+'</span>'+furigana(a)+'</button>'}).join('')+'</div><div class="feedback" id="feedback"></div><button class="next" id="next" disabled>'+(Z.i===total-1?(Z.cfg.followUp&&!Z.addedFollowUp?'Continue':'See results'):'Next question')+'</button>';
+ play.innerHTML='<h2 id="modalTitle">'+Z.cfg.title+'</h2><p class="lesson-goal">'+Z.cfg.goal+'</p><div class="qcount"><span>QUESTION '+(Z.i+1)+' OF '+total+'</span><span>'+(instant?Z.right+' RIGHT':'ANSWERS SHOWN AT THE END')+'</span></div><div class="qbar"><i style="width:'+(Z.i/total*100)+'%"></i></div><div class="question">'+furigana(q.prompt)+(q.say?'<div class="listen-row">'+sayButtonHtml(q.say)+'<span>Tap to hear it again</span></div>':'')+'</div>'+note+passage+'<div class="choices">'+q.options.map(function(a,i){return '<button class="choice" data-qz="'+i+'"><span class="letter">'+String.fromCharCode(65+i)+'</span>'+furigana(a)+'</button>'}).join('')+'</div><div class="feedback" id="feedback"></div>'+(q.revealSay?'<div class="kana-answer-audio" id="kanaAnswerAudio" hidden><span lang="ja">'+furigana(q.revealSay)+'</span>'+sayButtonHtml(q.revealSay,false,'Hear the word '+q.revealSay)+'<small>Hear the word</small></div>':'')+'<button class="next" id="next" disabled>'+(Z.i===total-1?(Z.cfg.followUp&&!Z.addedFollowUp?'Continue':'See results'):'Next question')+'</button>';
  play.querySelectorAll('[data-qz]').forEach(function(b){b.onclick=function(){
   if(Z.answered)return;Z.answered=true;
   var n=+b.dataset.qz,btns=Array.prototype.slice.call(play.querySelectorAll('.choice'));
@@ -834,6 +838,7 @@ function showQuizQuestion(){
   if(instant){btns[q.answer].classList.add('correct');var fb=play.querySelector('#feedback');
    if(n===q.answer){fb.textContent='Correct! '+q.why}else{btns[n].classList.add('wrong');fb.textContent='Not quite. '+q.why;fb.classList.add('bad')}}
   else{b.classList.add('picked')}
+  if(q.revealSay)play.querySelector('#kanaAnswerAudio').hidden=false;
   play.querySelector('#next').disabled=false;
  }});
  play.querySelector('#next').onclick=function(){Z.i++;showQuizQuestion()};
@@ -973,7 +978,7 @@ function kanaPrompt(entry,type,again=false){
     : type==='word'
       ? `Which romaji label matches the highlighted character?<br><span class="kana-quiz-word" lang="ja">${word[0].replace(glyph,`<mark>${glyph}</mark>`)}</span><br><small>${word[2]}</small>`
       : `What is the romaji reading of this character?<br><span class="kana-big" lang="ja">${glyph}</span>`;
-  return {glyph,prompt,options,answer:options.indexOf(correct),why:`${glyph} is romanized ${reading}${glyph==='を'||glyph==='ヲ'?' but is usually pronounced o': ''}.${type==='word'?` ${word[0]} (${word[1]}) means “${word[2]}.”`:''}`,again};
+  return {glyph,prompt,options,answer:options.indexOf(correct),why:`${glyph} is romanized ${reading}${glyph==='を'||glyph==='ヲ'?' but is usually pronounced o': ''}.${type==='word'?` ${word[0]} (${word[1]}) means “${word[2]}.”`:''}`,revealSay:word[0],again};
 }
 function openKanaUnit(unit){
   openOverlay(unit.name+' · '+unit.title.toUpperCase());
