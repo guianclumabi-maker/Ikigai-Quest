@@ -302,8 +302,16 @@ document.querySelectorAll('.level').forEach(b=>b.onclick=()=>{
     showToast(getChapterLockMsg(b.dataset.level));
     return;
   }
-  filter=b.dataset.level;
+  const selectedLevel=b.dataset.level;
+  filter=selectedLevel;
   render();
+  requestAnimationFrame(()=>{
+    if(filter!==selectedLevel)return;
+    const heading=[...document.querySelectorAll('.level')].find(level=>level.dataset.level===selectedLevel);
+    if(!heading)return;
+    const top=window.scrollY+heading.getBoundingClientRect().top-16;
+    window.scrollTo({top:Math.max(0,top),behavior:'instant'});
+  });
 });
 if(filter==='Scripts'){
   if(typeof window.renderKanaPath==='function')window.renderKanaPath();
